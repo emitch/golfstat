@@ -1,0 +1,15 @@
+Summary
+
+Our final project will use statistics available on the PGA Tour website to analyze the characteristics of the best professional golfers in the world. The PGA Tour keeps extremely detailed statistics about every player, course, and tournament throughout each season. In order to minimize the amount of work we will need to to acquiring our data, we expect to be able to use a pre-existing Python library which is built for scraping pgatour.com. We have two primary goals for this project: First, to determine the primary characteristics that determine how successful a player is during the course of the season. Second, we would like to be able to predict, for a given player, which courses (tournaments) are the best for him  or her to play during the course of a season in order to maximize their success.
+
+Statistics in Golf
+
+Golf is game that is perhaps unique in how many statistics are available for a particular player. The game is so easily stratified into categories, that an analyst can easily examine only a very specific part of someone’s performance. Most simply, a player’s game is separated into the ‘long’ game (long shots, generally longer than 100 yards) and the ‘short’ game (inside 100 yards and putting). A player’s performance can be further assessed in terms of either power or accuracy, which generally (but not always) are inversely related (players with more power are generally less accurate). One of the hardest parts about the game of golf is understanding what one needs to do in order to improve; professional players spend very long amounts of time analyzing their own performance in order to determine what they need to refine in order to shoot better scores. 
+
+We hope to be able to automate this process by accomplishing the first goal stated in the summary. By analyzing the entirety of the tour, we can decide on which statistics a) are the greatest determinants of success on a year-to-year basis and b) which statistics produce the greatest change in success when they are improved or get worse.
+
+The second stated goal will involve using much more in-depth data than the first, so it is possible that the scope of a three-week project will not be sufficient to complete it. However, if we are able to, it would be fabulously useful. For players who are not near the top of the earnings list, each year on the PGA Tour is a constant struggle to earn enough money to be able to come back the next year. Therefore, for these players, optimizing their schedules is vitally important. Currently, players do this by instinct, by talking with their coaches and going with a gut instinct. However, we believe that we can do better. 
+
+Data
+
+On the largest professional tours in the world, extensive statistics are kept on every player that ever competes during the course of the year. More importantly this data is available to the public. A Python library for scraping pgatour.com exists, and we hope that it will make the process of organizing our data. We will have to decide on a metric we will use for determining the success of a player (winnings, playoff points, Official World Golf Ranking, or a combination).
