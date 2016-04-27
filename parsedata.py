@@ -45,4 +45,5 @@ for f in selected_files:
     if len(sanitized):
         data[player_name + '_' + player_number + '_' + player_year] = sanitized
     
-    pprint(data)
+    
+pprint(data)
