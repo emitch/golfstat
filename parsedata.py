@@ -47,3 +47,5 @@ for f in selected_files:
     
     
 pprint(data)
+
+print('Retrieved %i players' % (len(data)))
