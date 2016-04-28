@@ -1,6 +1,6 @@
-import json
-import sys, os
+import sys, os, json
 from pprint import pprint
+import numpy as np
 
 def player_data_from_years(years, require_min_rounds=False):
     # Find files matching a given year
@@ -100,22 +100,64 @@ def extract_good_stats(feature_map, data):
 
     return good_stats
 
+def build_matrix(data, feature_map):
+    """ Convert feature dictionaries to 2D arrays
+    each row is a specific player and each column a specific stat """
+    # get number of features
+    n_features = len(feature_map)
+    # gather features for each player
+    player_stat_list = []
+    for player in data:
+        # initialize numpy array
+        player_stats = np.empty((1, n_features))
+        # iterate through stats and insert at appropriate index
+        for stat in player['stats']:
+            if stat not in feature_map: continue
+            # get string value of given stat
+            raw_val = player['stats'][stat]['value'].replace(',','')
 
-# The years we want to look at
-years = ['2015', '2014', '2013']
-#years = [str(x) for x in range(1980, 2016)]
+            # parse to float, taking account of wonky formatting
+            if '%' in raw_val: val = float(raw_val[:-1])/100
+            elif '$' in raw_val: val = float(raw_val[1:])
+            elif "'" in raw_val:
+                split = raw_val.split("' ")
+                val = int(split[0]) * 12 + int(split[1][:-1])
+            else: val = float(raw_val)
 
-# An array of dictionaries containing name, year, id, and stat dict
-data = player_data_from_years(years, True)
+            # add to array
+            player_stats[0, feature_map[stat]] = val
 
-# A dict from feature name to a dict containing {feature_index, num_appearances}
-feature_map = index_features_in_data(data)
+        # append to list of stat arrays
+        player_stat_list.append(player_stats)
 
-# Find which stats that actually appear in most of the players
-good_stats = extract_good_stats(feature_map, data)
+    # concetenate list into single numpy array
+    player_matrix = np.vstack(player_stat_list)
+    return player_matrix
 
-# An array of dictionaries like in data that have all desired stats
-good_data = select_records_with_stats(data, good_stats, feature_map)
+if __name__ == "__main__":
+    # The years we want to look at
+    years = ['2015', '2014', '2013']
+    #years = [str(x) for x in range(1980, 2016)]
 
-print('Found %i unique features for %i players' % (len(feature_map), len(data)))
-print('Found %i records containing stats <%s>' % (len(good_data), ', '.join(good_stats)))
+    # An array of dictionaries containing name, year, id, and stat dict
+    data = player_data_from_years(years, True)
+
+    # A dict from feature name to a dict containing {feature_index, num_appearances}
+    feature_map = index_features_in_data(data)
+
+    # Find which stats that actually appear in most of the players
+    good_stats = extract_good_stats(feature_map, data)
+    good_stats_keys = list(good_stats.keys())
+    good_feature_map = {}
+    for idx in range(len(good_stats_keys)):
+        good_feature_map[good_stats_keys[idx]] = idx
+
+    # An array of dictionaries like in data that have all desired stats
+    good_data = select_records_with_stats(data, good_stats, feature_map)
+
+    # make matrix of the good data
+    data_matrix = build_matrix(good_data, good_feature_map)
+    print(data_matrix)
+
+    print('Found %i unique features for %i players' % (len(feature_map), len(data)))
+    print('Found %i records containing stats <%s>' % (len(good_data), ', '.join(good_stats)))
