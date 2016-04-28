@@ -3,14 +3,16 @@ import sys, os
 from pprint import pprint
 
 def player_data_from_years(years):
+    # Find files matching a given year
     selected_files = []
     cwd = os.getcwd()
-
+    # Iterate through player folders
     for player_folder in os.listdir(cwd + '/players'):
+        # skip hidden folders
         if player_folder.startswith('.'): continue
-        
+        # get files in folder
         data_files = os.listdir(cwd + '/players/' + player_folder)
-        year_matches = []
+        # select files for given years
         for data_file in data_files:
             for year in years:
                 if data_file.startswith(year) and data_file.endswith('stat.json'):
@@ -18,18 +20,20 @@ def player_data_from_years(years):
 
     # An array of play stat dicts and values of dictionaries of stats
     data = []
-
+    # Iterate through found files and parse
     for f in selected_files:
+        # read json file
         file = open(f, 'r')
         json_data = json.load(file)
         file.close()
-        
+
+        # extract essentials from the json dictionary
         player_name = json_data['plrs'][0]['plrName']
         player_number = json_data['plrs'][0]['plrNum']
         player_year = json_data['plrs'][0]['years'][0]['year']
-        
+
+        # clean up dictionary
         sanitized = {}
-        
         for tour in json_data['plrs'][0]['years'][0]['tours']:
             if tour['tourName'] == 'PGA TOUR':
                 # This is from the PGA TOUR
@@ -40,12 +44,11 @@ def player_data_from_years(years):
                         name = stat['name']
                         # Normalize names for stat names that have changed
                         name = name.replace(' - ', ': ')
-                        sanitized[name] = {'rank': stat['rank'], 'value': stat['value']}
-        
+
         if len(sanitized):
             data.append({'name': player_name, 'id': player_number, 'year': player_year, 'stats': sanitized})
             # data[player_name + '_' + player_number + '_' + player_year] = sanitized
-    
+
     return data
 
 def index_features_in_data(data):
@@ -59,9 +62,9 @@ def index_features_in_data(data):
                 feature_count += 1
             else:
                 feature_index_map[stat]['appearances'] += 1
-    
+
     return feature_index_map
-    
+
 # Select only those records that have the given stats (name or index)
 def select_records_with_stats(records, stats, feature_map):
     passing_records = []
@@ -78,7 +81,7 @@ def select_records_with_stats(records, stats, feature_map):
             if feature_name not in player_data:
                 has_all_stats = False
                 break
-        
+
         if has_all_stats:
             passing_records.append(player)
 
