@@ -87,9 +87,19 @@ def select_records_with_stats(records, stats, feature_map):
 
     return passing_records
 
+def extract_good_stats(feature_map, data):
+    num_records = len(data)
+    requiredPercent = .8
+    good_stats = {}
+    for feature in feature_map:
+        num_app = int(feature_map[feature]['appearances'])
+        if num_app > requiredPercent * num_records:
+            good_stats[feature] = num_app
+            
+    return good_stats
+
 # The years we want to look at
 years = ['2015', '2014', '2013']
-stats = ["Putting Average", "Total Driving", "Putting from 6'", "Scrambling", "Ball Striking", "Strokes Gained: Putting"]
 
 # An array of dictionaries containing name, year, id, and stat dict
 data = player_data_from_years(years)
@@ -97,9 +107,11 @@ data = player_data_from_years(years)
 # A dict from feature name to a dict containing {feature_index, num_appearances}
 feature_map = index_features_in_data(data)
 
-# An array of dictionaries like in data that have all desired stats
-passing = select_records_with_stats(data, stats, feature_map)
+# Find which stats that actually appear in most of the players
+good_stats = extract_good_stats(feature_map, data)
 
-# print(json.dumps(feature_map, indent=4))
+# An array of dictionaries like in data that have all desired stats
+good_data = select_records_with_stats(data, good_stats, feature_map)
+
 print('Found %i unique features for %i players' % (len(feature_map), len(data)))
-print('Found %i records containing stats <%s>' % (len(passing), ', '.join(stats)))
+print('Found %i records containing stats <%s>' % (len(good_data), ', '.join(good_stats)))
