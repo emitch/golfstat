@@ -2,7 +2,7 @@ import json
 import sys, os
 from pprint import pprint
 
-def player_data_from_years(years):
+def player_data_from_years(years, require_min_rounds=False):
     # Find files matching a given year
     selected_files = []
     cwd = os.getcwd()
@@ -36,14 +36,15 @@ def player_data_from_years(years):
         sanitized = {}
         for tour in json_data['plrs'][0]['years'][0]['tours']:
             if tour['tourName'] == 'PGA TOUR':
+                if require_min_rounds and tour['minRndsMet'] == 'N': continue
                 # This is from the PGA TOUR
-                # if tour['minRndsMet'] == 'Y': # OPTIONAL
                 for cat in tour['statCats']:
                     # Get stats from all categories
                     for stat in cat['stats']:
                         name = stat['name']
                         # Normalize names for stat names that have changed
                         name = name.replace(' - ', ': ')
+                        sanitized[name] = {'rank': stat['rank'], 'value': stat['value']}
 
         if len(sanitized):
             data.append({'name': player_name, 'id': player_number, 'year': player_year, 'stats': sanitized})
@@ -88,6 +89,7 @@ def select_records_with_stats(records, stats, feature_map):
     return passing_records
 
 def extract_good_stats(feature_map, data):
+    # Prune stats that don't show up in at least 80% of the entries
     num_records = len(data)
     requiredPercent = .8
     good_stats = {}
@@ -95,14 +97,16 @@ def extract_good_stats(feature_map, data):
         num_app = int(feature_map[feature]['appearances'])
         if num_app > requiredPercent * num_records:
             good_stats[feature] = num_app
-            
+
     return good_stats
+
 
 # The years we want to look at
 years = ['2015', '2014', '2013']
+#years = [str(x) for x in range(1980, 2016)]
 
 # An array of dictionaries containing name, year, id, and stat dict
-data = player_data_from_years(years)
+data = player_data_from_years(years, True)
 
 # A dict from feature name to a dict containing {feature_index, num_appearances}
 feature_map = index_features_in_data(data)
