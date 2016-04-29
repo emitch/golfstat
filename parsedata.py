@@ -100,7 +100,7 @@ def extract_good_stats(feature_map, data):
 
     return good_stats
 
-def build_matrix(data, feature_map):
+def build_stat_matrix(data, feature_map):
     """ Convert feature dictionaries to 2D arrays
     each row is a specific player and each column a specific stat """
     # get number of features
@@ -134,7 +134,24 @@ def build_matrix(data, feature_map):
     player_matrix = np.vstack(player_stat_list)
     return player_matrix
 
-if __name__ == "__main__":
+def extract_player_ranks(data):
+    player_ranking_list = []
+    # get each ranking
+    for player in data:
+        try: allaround = float(player['stats']['All-Around Ranking']['rank'])
+        except KeyError: allaround = np.nan
+
+        try: fedex = float(player['stats']['FedExCup Season Points']['rank'])
+        except KeyError: fedex = np.nan
+
+        try: money = float(player['stats']['Money Leaders']['rank'])
+        except KeyError: money = np.nan
+
+        player_ranking_list.append(np.array([allaround, fedex, money]))
+
+    return np.vstack(player_ranking_list)
+
+def main():
     # The years we want to look at
     years = ['2015', '2014', '2013']
     #years = [str(x) for x in range(1980, 2016)]
@@ -149,15 +166,22 @@ if __name__ == "__main__":
     good_stats = extract_good_stats(feature_map, data)
     good_stats_keys = list(good_stats.keys())
     good_feature_map = {}
-    for idx in range(len(good_stats_keys)):
+    for idx in range(len(good_stats)):
         good_feature_map[good_stats_keys[idx]] = idx
 
     # An array of dictionaries like in data that have all desired stats
     good_data = select_records_with_stats(data, good_stats, feature_map)
 
     # make matrix of the good data
-    data_matrix = build_matrix(good_data, good_feature_map)
-    print(data_matrix)
+    stat_matrix = build_stat_matrix(good_data, good_feature_map)
+    rank_matrix = extract_player_ranks(good_data)
+
+    # save things
+    np.savetxt('stats.csv', stat_matrix, delimiter=',')
+    np.savetxt('ranks.csv', rank_matrix, delimiter=',')
 
     print('Found %i unique features for %i players' % (len(feature_map), len(data)))
     print('Found %i records containing stats <%s>' % (len(good_data), ', '.join(good_stats)))
+
+if __name__ == "__main__":
+    main()
