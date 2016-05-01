@@ -88,12 +88,13 @@ def select_records_with_stats(records, stats, feature_map):
 
     return passing_records
 
-def extract_good_stats(feature_map, data):
+def extract_good_stats(feature_map, data, exclude=None):
     # Prune stats that don't show up in at least 80% of the entries
     num_records = len(data)
     requiredPercent = .8
     good_stats = {}
     for feature in feature_map:
+        if feature in exclude: continue
         num_app = int(feature_map[feature]['appearances'])
         if num_app > requiredPercent * num_records:
             good_stats[feature] = num_app
@@ -151,7 +152,7 @@ def extract_player_ranks(data):
 
     return np.vstack(player_ranking_list)
 
-def main():
+if __name__ == "__main__":
     # The years we want to look at
     years = ['2015', '2014', '2013']
     #years = [str(x) for x in range(1980, 2016)]
@@ -163,8 +164,10 @@ def main():
     feature_map = index_features_in_data(data)
 
     # Find which stats that actually appear in most of the players
-    good_stats = extract_good_stats(feature_map, data)
-    good_stats_keys = list(good_stats.keys())
+    exclude = ['All-Around Ranking', 'FedExCup Season Points', 'Money Leaders']
+    good_stats = extract_good_stats(feature_map, data, exclude)
+
+    good_stats_keys = np.array(list(good_stats.keys()))
     good_feature_map = {}
     for idx in range(len(good_stats)):
         good_feature_map[good_stats_keys[idx]] = idx
@@ -177,11 +180,12 @@ def main():
     rank_matrix = extract_player_ranks(good_data)
 
     # save things
+    with open('stat_names.csv', 'w') as file:
+        for name in good_stats_keys: file.write('%s,' % name)
+
     np.savetxt('stats.csv', stat_matrix, delimiter=',')
     np.savetxt('ranks.csv', rank_matrix, delimiter=',')
 
     print('Found %i unique features for %i players' % (len(feature_map), len(data)))
     print('Found %i records containing stats <%s>' % (len(good_data), ', '.join(good_stats)))
 
-if __name__ == "__main__":
-    main()
