@@ -91,14 +91,19 @@ def select_records_with_stats(records, stats, feature_map):
 def extract_good_stats(feature_map, data, exclude=None):
     # Prune stats that don't show up in at least 80% of the entries
     num_records = len(data)
-    requiredPercent = .8
+    required_percent = .8
     good_stats = {}
     for feature in feature_map:
         if feature in exclude: continue
         num_app = int(feature_map[feature]['appearances'])
-        if num_app > requiredPercent * num_records:
-            good_stats[feature] = num_app
+        if num_app > required_percent * num_records:
+            good_stats[feature] = 0
 
+    # re-index
+    for stat, idx in zip(good_stats, range(len(good_stats))):
+        good_stats[stat] = idx
+
+    # dictionary mapping stats to indices
     return good_stats
 
 def build_stat_matrix(data, feature_map):
@@ -121,9 +126,12 @@ def build_stat_matrix(data, feature_map):
             if '%' in raw_val: val = float(raw_val[:-1])/100
             elif '$' in raw_val: val = float(raw_val[1:])
             elif "'" in raw_val:
+                # convert distance to inches
                 split = raw_val.split("' ")
                 val = int(split[0]) * 12 + int(split[1][:-1])
-            else: val = float(raw_val)
+            else:
+                try: val = float(raw_val)
+                except: continue
 
             # add to array
             player_stats[0, feature_map[stat]] = val
@@ -152,40 +160,41 @@ def extract_player_ranks(data):
 
     return np.vstack(player_ranking_list)
 
-if __name__ == "__main__":
-    # The years we want to look at
-    years = ['2015', '2014', '2013']
-    #years = [str(x) for x in range(1980, 2016)]
+def extract_player_names(data):
+    player_names = []
+    for player in data:
+        player_names.append(player['name'])
 
-    # An array of dictionaries containing name, year, id, and stat dict
-    data = player_data_from_years(years, True)
+    return player_names
 
-    # A dict from feature name to a dict containing {feature_index, num_appearances}
+def gather(years):
+    # build dictionaries
+    data = player_data_from_years(years)
     feature_map = index_features_in_data(data)
-
-    # Find which stats that actually appear in most of the players
+    # clean up
     exclude = ['All-Around Ranking', 'FedExCup Season Points', 'Money Leaders']
     good_stats = extract_good_stats(feature_map, data, exclude)
+    data = select_records_with_stats(data, good_stats, feature_map)
 
-    good_stats_keys = np.array(list(good_stats.keys()))
-    good_feature_map = {}
-    for idx in range(len(good_stats)):
-        good_feature_map[good_stats_keys[idx]] = idx
+    # convert to matrix and get ranks
+    ranks = extract_player_ranks(data)
+    names = extract_player_names(data)
+    stats = build_stat_matrix(data, good_stats)
 
-    # An array of dictionaries like in data that have all desired stats
-    good_data = select_records_with_stats(data, good_stats, feature_map)
+    return stats, ranks, names, good_stats
 
-    # make matrix of the good data
-    stat_matrix = build_stat_matrix(good_data, good_feature_map)
-    rank_matrix = extract_player_ranks(good_data)
+if __name__ == "__main__":
+    # The years we want to look at
+    years = ['2013', '2014', '2015']
+    stat_matrix, rank_matrix, player_names, stat_names = gather(years)
 
     # save things
     with open('stat_names.csv', 'w') as file:
-        for name in good_stats_keys: file.write('%s,' % name)
+        for name in stat_names: file.write('%s,' % name)
+    with open('player_names.csv', 'w') as file:
+        for name in player_names: file.write('%s,' % name)
 
     np.savetxt('stats.csv', stat_matrix, delimiter=',')
     np.savetxt('ranks.csv', rank_matrix, delimiter=',')
 
-    print('Found %i unique features for %i players' % (len(feature_map), len(data)))
-    print('Found %i records containing stats <%s>' % (len(good_data), ', '.join(good_stats)))
-
+    print('Found %i unique features in %i records' % (len(stat_names), len(player_names)))
