@@ -50,7 +50,8 @@ def player_data_from_years(years, require_min_rounds=False):
                         sanitized[name] = {'rank': stat['rank'], 'value': stat['value']}
 
         if len(sanitized):
-            data.append({'name': player_name, 'id': player_number, 'year': player_year, 'stats': sanitized})
+            data.append({'name': player_name, 'id': player_number, \
+                'year': player_year, 'stats': sanitized})
             # data[player_name + '_' + player_number + '_' + player_year] = sanitized
 
     return data
