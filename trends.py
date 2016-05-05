@@ -1,11 +1,11 @@
 import os, sys, scipy.stats
 import numpy as np
 import matplotlib.pyplot as plt
-from parsedata import gather, index_features_in_data
+from parsedata import gather, index_stats_in_data
 from sklearn.linear_model import LinearRegression, Lasso, Ridge
 from sklearn.cross_validation import LeaveOneOut
 
-# stat names corresponding to rankings, should be exluded in feature gathering
+# stat names corresponding to rankings, should be exluded in stat gathering
 rank_stats = ['All-Around Ranking', 'FedExCup Season Points', 'Money Leaders']
 
 def beautify(fig):
@@ -59,30 +59,30 @@ def ordinal_loo(stats, rankings, model=LinearRegression()):
     return errs
 
 def correlations_over_time(start, end, stats_list=None):
-    # index features once
+    # index stats once
     if stats_list is None:
-        # get all features from big index thing
-        feature_as_index, index_as_feature, _ = index_features_in_data()
+        # get all stats from big index thing
+        stat_as_index, index_as_stat, _ = index_stats_in_data()
     else:
-        # make a temporary index of the features we want to see
+        # make a temporary index of the stats we want to see
         # TODO: detect which stats are interesting and use those
-        feature_as_index = {}
-        index_as_feature = [None] * len(stats_list)
+        stat_as_index = {}
+        index_as_stat = [None] * len(stats_list)
         for i, stat in enumerate(stats_list):
-            feature_as_index[stat] = i
-            index_as_feature[i] = stat
+            stat_as_index[stat] = i
+            index_as_stat[i] = stat
 
-    n_features = len(feature_as_index)
+    n_stats = len(stat_as_index)
     n_rankings = 3
     n_years = end-start+1
 
     # initialize 3D numpy array to hold correlations for each year
-    corr = np.empty([n_features, n_rankings, n_years], dtype=float)
+    corr = np.empty([n_stats, n_rankings, n_years], dtype=float)
     for year in range(start, end+1):
         print('Gathering stats for %d\r' % year, end="")
         # get the good good
         stats, ranks, _, _ = gather(
-            [str(year)], feature_as_index, index_as_feature)
+            [str(year)], stat_as_index, index_as_stat)
 
         # calculate spearman correlations
         corr[:, :, year-start] = rank_correlation(stats, ranks)
@@ -90,7 +90,7 @@ def correlations_over_time(start, end, stats_list=None):
     # Each correlation over time is a slice along dimension 3
     for rank in range(n_rankings):
         fig = plt.figure(figsize=(12,8))
-        for stat in range(n_features):
+        for stat in range(n_stats):
             plt.plot(range(start, end+1), corr[stat, rank, :], '-')
         plt.title('Correlation with ' + rank_stats[rank] + ' over time by stat')
         plt.xlabel('Year')
@@ -99,7 +99,7 @@ def correlations_over_time(start, end, stats_list=None):
         ax = beautify(fig)
         box = ax.get_position()
         ax.set_position([box.x0, box.y0, box.width * 0.75, box.height])
-        plt.legend(index_as_feature, frameon=False,
+        plt.legend(index_as_stat, frameon=False,
             bbox_to_anchor=(1.0, 0.75), loc=2, mode='expand')
 
     plt.show()
@@ -113,7 +113,7 @@ if __name__ == "__main__":
 
     # Load data
     years = ['2015','2014']
-    stats, ranks, index_as_feature, feature_as_index = gather(years)
+    stats, ranks, index_as_stat, stat_as_index = gather(years)
 
     # calculate correlations
     rank_corrs = rank_correlation(stats, ranks)
@@ -121,16 +121,16 @@ if __name__ == "__main__":
     # sort by correlation with all-around ranking
     sorted_indices = np.argsort(np.absolute(rank_corrs[:,1]))[::-1]
     rank_corrs = rank_corrs[sorted_indices,:]
-    ordered_features = index_as_feature[sorted_indices]
+    ordered_stats = index_as_stat[sorted_indices]
 
     print('%45s:\tSpearman Correlation per Ranking' % 'stat')
     for i, corr in enumerate(rank_corrs):
         print('%45s:\t% .3f\t% .3f\t% .3f' %
-            (ordered_features[i], corr[0], corr[1], corr[2]))
+            (ordered_stats[i], corr[0], corr[1], corr[2]))
 
     ###########################################
     # Correlations of different stats over time
     ###########################################
     print('Tracking stats ')
-    interesting_stats = ordered_features[:9]
+    interesting_stats = ordered_stats[:9]
     correlations_over_time(1980, 2015, interesting_stats)

@@ -2,7 +2,7 @@ import sys, os, json
 from pprint import pprint
 import numpy as np
 
-# stat names corresponding to rankings, should be exluded in feature gathering
+# stat names corresponding to rankings, should be exluded in stat gathering
 rank_stats = ['All-Around Ranking', 'FedExCup Season Points', 'Money Leaders']
 
 def player_data_from_years(years, require_min_rounds=False):
@@ -19,7 +19,8 @@ def player_data_from_years(years, require_min_rounds=False):
         for data_file in data_files:
             for year in years:
                 if data_file.startswith(year) and data_file.endswith('stat.json'):
-                    selected_files.append(cwd + '/players/' + player_folder + '/' + data_file)
+                    selected_files.append(
+                        cwd + '/players/' + player_folder + '/' + data_file)
 
     # An array of play stat dicts and values of dictionaries of stats
     data = []
@@ -56,21 +57,22 @@ def player_data_from_years(years, require_min_rounds=False):
 
     return data
 
-def index_features_in_data(reindex=False):
-    """ create a single mapping from features to integers that will
+def index_stats_in_data(reindex=False, required_fraction=0.8):
+    """ create a single mapping from stats to integers that will
     be the same in all years.  To do this, run the indexing on
     the entire corpus and save the result to a file """
 
-    if not reindex and os.path.isfile('feature_as_index.json'):
-        print('Loading saved feature indexing...')
-        with open('feature_as_index.json', 'r') as file:
-            feature_as_index = json.load(file)
-        with open('feature_appearances.json', 'r') as file:
-            feature_appearances = json.load(file)
-        index_as_feature = np.genfromtxt(
-            'index_as_feature.csv', delimiter=',', dtype=str)
+    if not reindex and os.path.isfile('stat_as_index.json'):
+        print('Loading saved stat indexing...')
+        with open('stat_as_index.json', 'r') as file:
+            stat_as_index = json.load(file)
+        with open('appearances.json', 'r') as file:
+            appearances = json.load(file)
+        index_as_stat = np.genfromtxt(
+            'index_as_stat.csv', delimiter=',', dtype=str)
+        entries_per_year = np.genfromtxt('entries_per_year.csv', delimiter=',')
     else:
-        print('Indexing features...')
+        print('Indexing stats...')
         # load data from all years
         start_year = 1980
         end_year = 2015
@@ -78,13 +80,10 @@ def index_features_in_data(reindex=False):
             [str(x) for x in range(start_year, end_year+1)])
 
         # initialize empty data structures
-        feature_as_index = {}
-        feature_appearances = {}
+        appearances = {}
         entries_per_year = np.zeros([end_year-start_year + 1])
-        feature_count = 0
 
-        # iterate through players and add each appearing stat to the map
-        # also keep track of the number of appearances of each stat
+        # keep track of the number of appearances of each stat
         for player in data:
             # get year data
             year = int(player['year'])
@@ -95,29 +94,37 @@ def index_features_in_data(reindex=False):
                 # exclude stats corresponding to rankings
                 if stat in rank_stats: continue
                 # add unseen stats to dictionary
-                if stat not in feature_as_index:
-                    feature_as_index[stat] = feature_count
-                    feature_appearances[stat] = 1
-                    feature_count += 1
-                # otherwise update number of appearances
+                if stat not in appearances:
+                    appearances[stat] = 1
                 else:
-                    feature_appearances[stat] += 1
+                    appearances[stat] += 1
 
-        # do reverse mapping (index as feature)
-        index_as_feature = [None]*len(feature_as_index)
-        for feature in feature_as_index:
-            index_as_feature[feature_as_index[feature]] = feature
+        # prune stats that don't show up in the required fraction of records
+        stat_count = 0
+        stat_as_index = {}
+        cutoff = len(data) * required_fraction
+        # iterate through appearances and add passing stats to dictionary
+        for stat in appearances:
+            if appearances[stat] < cutoff: continue
+            stat_as_index[stat] = stat_count
+            stat_count += 1
+
+        # do reverse mapping (index as stat)
+        index_as_stat = [None]*len(stat_as_index)
+        for stat in stat_as_index:
+            index_as_stat[stat_as_index[stat]] = stat
 
         # save data
-        with open('feature_as_index.json', 'w') as file:
-            json.dump(feature_as_index, file)
-        with open('feature_appearances.json', 'w') as file:
-            json.dump(feature_appearances, file)
-        with open('index_as_feature.csv', 'w') as file:
-            for line in index_as_feature:
+        with open('stat_as_index.json', 'w') as file:
+            json.dump(stat_as_index, file)
+        with open('appearances.json', 'w') as file:
+            json.dump(appearances, file)
+        with open('index_as_stat.csv', 'w') as file:
+            for line in index_as_stat:
                 file.write('%s,' % line)
+        np.savetxt('entries_per_year.csv', entries_per_year, delimiter=',')
 
-    return feature_as_index, index_as_feature, feature_appearances
+    return stat_as_index, index_as_stat, appearances, entries_per_year
 
 # Select only those records that have the given stats (name or index)
 def select_records_with_stats(records, stats):
@@ -126,8 +133,8 @@ def select_records_with_stats(records, stats):
         player_data = player['stats']
         has_all_stats = True
         for stat in stats:
-            feature_name = stat
-            if feature_name not in player_data:
+            stat_name = stat
+            if stat_name not in player_data:
                 has_all_stats = False
                 break
 
@@ -137,18 +144,18 @@ def select_records_with_stats(records, stats):
     return passing_records
 
 """
-# TODO: combine this with index_features_in_data
+# TODO: combine this with index_stats_in_data
 # THIS IS BROKEN, don't use with other functions
-def extract_good_stats(feature_appearances, feature_as_index, data, exclude=None):
+def extract_good_stats(appearances, stat_as_index, data, exclude=None):
     # Prune stats that don't show up in at least 80% of the entries
     num_records = len(data)
     required_percent = .8
     good_stats = {}
-    for feature in feature_map:
-        if feature in exclude: continue
-        num_app = feature_appearances[feature]
+    for stat in stat_map:
+        if stat in exclude: continue
+        num_app = appearances[stat]
         if num_app > required_percent * num_records:
-            good_stats[feature] = feature_as_index[feature]
+            good_stats[stat] = stat_as_index[stat]
 
     # # re-index
     # for stat, idx in zip(good_stats, range(len(good_stats))):
@@ -158,20 +165,20 @@ def extract_good_stats(feature_appearances, feature_as_index, data, exclude=None
     return good_stats
 """
 
-def build_stat_matrix(data, feature_as_index):
-    """ Convert feature dictionaries to 2D arrays
+def build_stat_matrix(data, stat_as_index):
+    """ Convert stat dictionaries to 2D arrays
     each row is a specific player and each column a specific stat """
-    # get number of features
-    n_features = len(feature_as_index)
+    # get number of stats
+    n_stats = len(stat_as_index)
     n_players = len(data)
 
     # initialize numpy array to NaNs
-    player_matrix = np.empty([n_players, n_features], dtype=float)
+    player_matrix = np.empty([n_players, n_stats], dtype=float)
     player_matrix.fill(np.nan)
     for i, player in enumerate(data):
         # iterate through stats and insert at appropriate index
         for stat in player['stats']:
-            if stat not in feature_as_index: continue
+            if stat not in stat_as_index: continue
             # get string value of given stat
             raw_val = player['stats'][stat]['value'].replace(',','')
 
@@ -187,7 +194,7 @@ def build_stat_matrix(data, feature_as_index):
                 except: continue
 
             # add to array
-            player_matrix[i, feature_as_index[stat]] = val
+            player_matrix[i, stat_as_index[stat]] = val
 
     return player_matrix
 
@@ -216,26 +223,26 @@ def extract_player_names(data):
 
     return player_names
 
-def gather(years, feature_as_index=None, index_as_feature=None):
+def gather(years, stat_as_index=None, index_as_stat=None):
     # build dictionaries
-    if feature_as_index is None or index_as_feature is None:
-        feature_as_index, index_as_feature, _ = index_features_in_data()
+    if stat_as_index is None or index_as_stat is None:
+        stat_as_index, index_as_stat, _, _ = index_stats_in_data()
     data = player_data_from_years(years)
     # # clean ups
     # exclude = ['All-Around Ranking', 'FedExCup Season Points', 'Money Leaders']
-    # good_stats = extract_good_stats(feature_map, data, exclude)
-    # data = select_records_with_stats(data, good_stats, feature_map)
+    # good_stats = extract_good_stats(stat_map, data, exclude)
+    # data = select_records_with_stats(data, good_stats, stat_map)
 
     # convert to matrix and get ranks
     ranks = extract_player_ranks(data)
     # names = extract_player_names(data)
-    stats = build_stat_matrix(data, feature_as_index)
+    stats = build_stat_matrix(data, stat_as_index)
 
-    return stats, ranks, index_as_feature, feature_as_index
+    return stats, ranks, index_as_stat, stat_as_index
 
 if __name__ == "__main__":
     # The years we want to look at
     years = ['2013', '2014', '2015']
-    stat_matrix, rank_matrix, index_as_feature, stat_names = gather(years)
+    stat_matrix, rank_matrix, index_as_stat, stat_names = gather(years)
 
-    print('Found %i records with %i unique features' % stat_matrix.shape)
+    print('Found %i records with %i unique stats' % stat_matrix.shape)

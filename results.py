@@ -2,9 +2,11 @@ from bs4 import BeautifulSoup as Soup
 import requests, json, os
 
 def scrape_scorecards():
+    """ mine the pgatour data endpoint for individual tournament scorecards
+    and copy the .json files and folder structure to the disk """
+
     # format for scorecard url
     source_url = 'http://www.pgatour.com/data/r/'
-    start_year, end_year = 1980, 2016
 
     # parse base page to get each tournament
     source_soup = Soup(requests.get(source_url).text, 'html.parser')
@@ -79,5 +81,5 @@ def compile_scorecards():
     return None
 
 if __name__ == '__main__':
-    scrape_courses()
+    #
 
