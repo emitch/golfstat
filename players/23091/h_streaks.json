@@ -1,0 +1,302 @@
+<?xml version="1.0" ?>
+<!--16:54:52--><plrs><statList>
+<stat><stid>295</stid><stName>Best YTD 1-Putt or Better Streak</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+<stat><stid>294</stid><stName>Best YTD streak w/o a 3-Putt</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+<stat><stid>483</stid><stName>Current Streak w/o a 3-Putt</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+<stat><stid>296</stid><stName>Consecutive Sand Saves</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+<stat><stid>297</stid><stName>Consecutive Fairways Hit</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+<stat><stid>298</stid><stName>Consecutive Greens in Regulation</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+<stat><stid>452</stid><stName>Consecutive Holes below Par</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+<stat><stid>449</stid><stName>Consecutive Par 3 Birdies</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+<stat><stid>450</stid><stName>Consecutive Par 4 Birdies</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+<stat><stid>451</stid><stName>Consecutive Par 5 Birdies</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+</statList><plr plrNum="23091" last="Morin" first="Alan" middle="" nickname="" full="Alan Morin" currentYear="2010">
+<tour tourCodeLC="h" tourCodeUC="H" tourDesc="Nationwide Tour">
+<year year = "1998">
+<trnDetail><endDate>01/18/1998</endDate><trn trnNum="020" permNum="063" officialFlg="Y" trnName="NIKE South Florida Open" statCalcFlag="N"></trn><finPos unfmt="977" fmt="Cut" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>74</rndScr><posInField>T114</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>74</rndScr><posInField>T134</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>148</totalScr><relToPar>+ 8</relToPar></scr><scrAvg unfmt="7400"> 74.00</scrAvg><totMoney></totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="2">         2</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="15">        15</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="9">         9</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="3">         3</stValue></stat>
+<stat><stid>297</stid><stValue unfmt="5">         5</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="4">         4</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>450</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="0"></stValue></stat>
+</profile></stats></trnDetail>
+</year>
+<year year = "1999">
+<trnDetail><endDate>01/10/1999</endDate><trn trnNum="010" permNum="063" officialFlg="Y" trnName="NIKE South Florida Classi" statCalcFlag="N"></trn><finPos unfmt="65" fmt="T65" playoffFlg=""/><offMoney unfmt="27000">      270.00</offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>72</rndScr><posInField> T34</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>74</rndScr><posInField> T53</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>72</rndScr><posInField> T54</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>76</rndScr><posInField> T65</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>013</posLastRound><totalScr>294</totalScr><relToPar>+10</relToPar></scr><scrAvg unfmt="7350"> 73.50</scrAvg><totMoney>      270.00</totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="4">         4</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="29">        29</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="16">        16</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>297</stid><stValue unfmt="8">         8</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="5">         5</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="2">         2</stValue></stat>
+<stat><stid>450</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="2">         2</stValue></stat>
+</profile></stats></trnDetail>
+</year>
+<year year = "2003">
+<trnDetail><endDate>10/26/2003</endDate><trn trnNum="295" permNum="083" officialFlg="Y" trnName="Miccosukee Championship" statCalcFlag="N"></trn><finPos unfmt="977" fmt="Cut" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>68</rndScr><posInField> T16</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>74</rndScr><posInField> T83</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>142</totalScr><relToPar>E</relToPar></scr><scrAvg unfmt="7100"> 71.00</scrAvg><totMoney></totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="4">         4</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="23">        23</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="12">        12</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>297</stid><stValue unfmt="6">         6</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="4">         4</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="2">         2</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>450</stid><stValue unfmt="2">         2</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="2">         2</stValue></stat>
+</profile></stats></trnDetail>
+</year>
+<year year = "2005">
+<trnDetail><endDate>10/23/2005</endDate><trn trnNum="310" permNum="083" officialFlg="N" trnName="(*) Miccosukee Championship" statCalcFlag="N"></trn><finPos unfmt="996" fmt="CNL" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>2</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>3</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>   </totalScr><relToPar></relToPar></scr><scrAvg unfmt="0"></scrAvg><totMoney></totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>294</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>483</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>296</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>297</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>298</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>452</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>449</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>450</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>451</stid><stValue unfmt="0"></stValue></stat>
+</profile></stats></trnDetail>
+</year>
+<year year = "2007">
+<trnDetail><endDate>10/28/2007</endDate><trn trnNum="310" permNum="083" officialFlg="Y" trnName="Miccosukee Championship" statCalcFlag="N"></trn><finPos unfmt="49" fmt="T49" playoffFlg=""/><offMoney unfmt="201250">     2012.50</offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>71</rndScr><posInField> T41</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>69</rndScr><posInField> T41</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>72</rndScr><posInField> T49</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>72</rndScr><posInField> T49</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>013</posLastRound><totalScr>284</totalScr><relToPar>E</relToPar></scr><scrAvg unfmt="7100"> 71.00</scrAvg><totMoney>     2012.50</totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="3">         3</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="37">        37</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="34">        34</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="2">         2</stValue></stat>
+<stat><stid>297</stid><stValue unfmt="11">        11</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="5">         5</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>450</stid><stValue unfmt="2">         2</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="2">         2</stValue></stat>
+</profile></stats></trnDetail>
+</year>
+<year year = "2008">
+<trnDetail><endDate>10/26/2008</endDate><trn trnNum="310" permNum="083" officialFlg="Y" trnName="Miccosukee Championship" statCalcFlag="N"></trn><finPos unfmt="45" fmt="T45" playoffFlg=""/><offMoney unfmt="227678">     2276.78</offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>72</rndScr><posInField> T37</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>72</rndScr><posInField> T57</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>71</rndScr><posInField> T55</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>69</rndScr><posInField> T45</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>010</posLastRound><totalScr>284</totalScr><relToPar>E</relToPar></scr><scrAvg unfmt="7100"> 71.00</scrAvg><totMoney>     2276.78</totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="6">         6</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="66">        66</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="66">        66</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="2">         2</stValue></stat>
+<stat><stid>297</stid><stValue unfmt="7">         7</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="8">         8</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="3">         3</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="2">         2</stValue></stat>
+<stat><stid>450</stid><stValue unfmt="4">         4</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="1">         1</stValue></stat>
+</profile></stats></trnDetail>
+</year>
+<year year = "2009">
+<trnDetail><endDate>10/18/2009</endDate><trn trnNum="320" permNum="083" officialFlg="Y" trnName="Miccosukee Championship" statCalcFlag="N"></trn><finPos unfmt="977" fmt="Cut" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>69</rndScr><posInField> T28</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>77</rndScr><posInField>T113</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>146</totalScr><relToPar>+ 4</relToPar></scr><scrAvg unfmt="7300"> 73.00</scrAvg><totMoney></totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="3">         3</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="36">        36</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="36">        36</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>297</stid><stValue unfmt="9">         9</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="4">         4</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>450</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="1">         1</stValue></stat>
+</profile></stats></trnDetail>
+</year>
+<year year = "2010">
+<trnDetail><endDate>05/16/2010</endDate><trn trnNum="090" permNum="037" officialFlg="Y" trnName="BMW Charity Pro-Am" statCalcFlag="N"></trn><finPos unfmt="25" fmt="T25" playoffFlg=""/><offMoney unfmt="457715">     4577.15</offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>70</rndScr><posInField> T53</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>69</rndScr><posInField> T49</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>68</rndScr><posInField> T36</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>67</rndScr><posInField> T25</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>010</posLastRound><totalScr>274</totalScr><relToPar>-12</relToPar></scr><scrAvg unfmt="6850"> 68.50</scrAvg><totMoney>     4577.15</totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="3">         3</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="31">        31</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="22">        22</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>297</stid><stValue unfmt="11">        11</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="24">        24</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="3">         3</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="2">         2</stValue></stat>
+<stat><stid>450</stid><stValue unfmt="2">         2</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="2">         2</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>05/23/2010</endDate><trn trnNum="100" permNum="048" officialFlg="Y" trnName="The Rex Hospital Open" statCalcFlag="N"></trn><finPos unfmt="977" fmt="Cut" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>72</rndScr><posInField>T104</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>74</rndScr><posInField>T133</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>146</totalScr><relToPar>+ 4</relToPar></scr><scrAvg unfmt="7300"> 73.00</scrAvg><totMoney></totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="2">         2</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="16">        16</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="10">        10</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>297</stid><stValue unfmt="9">         9</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="8">         8</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>450</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="1">         1</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>06/27/2010</endDate><trn trnNum="140" permNum="095" officialFlg="Y" trnName="Mexico Open Bicentenary" statCalcFlag="N"></trn><finPos unfmt="61" fmt="T61" playoffFlg=""/><offMoney unfmt="172500">     1725.00</offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>68</rndScr><posInField>  T6</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>76</rndScr><posInField> T31</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>75</rndScr><posInField> T58</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>75</rndScr><posInField> T61</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>012</posLastRound><totalScr>294</totalScr><relToPar>+ 6</relToPar></scr><scrAvg unfmt="7350"> 73.50</scrAvg><totMoney>     1725.00</totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>294</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>483</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>296</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>297</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>298</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>452</stid><stValue unfmt="2">         2</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>450</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="2">         2</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>07/11/2010</endDate><trn trnNum="150" permNum="096" officialFlg="Y" trnName="Ford Wayne Gretzky" statCalcFlag="N"></trn><finPos unfmt="977" fmt="Cut" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>73</rndScr><posInField>T140</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>74</rndScr><posInField> 157</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>147</totalScr><relToPar>+ 4</relToPar></scr><scrAvg unfmt="7350"> 73.50</scrAvg><totMoney></totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="3">         3</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="16">        16</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="4">         4</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>297</stid><stValue unfmt="8">         8</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="12">        12</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="2">         2</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>450</stid><stValue unfmt="2">         2</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="1">         1</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>07/18/2010</endDate><trn trnNum="155" permNum="105" officialFlg="Y" trnName="Chiquita Classic" statCalcFlag="N"></trn><finPos unfmt="977" fmt="Cut" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>75</rndScr><posInField>T140</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>71</rndScr><posInField>T134</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>146</totalScr><relToPar>+ 2</relToPar></scr><scrAvg unfmt="7300"> 73.00</scrAvg><totMoney></totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="3">         3</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="23">        23</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="12">        12</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>297</stid><stValue unfmt="6">         6</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="6">         6</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="2">         2</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>450</stid><stValue unfmt="2">         2</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="2">         2</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>08/01/2010</endDate><trn trnNum="170" permNum="059" officialFlg="Y" trnName="Cox Classic" statCalcFlag="N"></trn><finPos unfmt="977" fmt="Cut" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>73</rndScr><posInField>T133</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>74</rndScr><posInField>T149</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>147</totalScr><relToPar>+ 5</relToPar></scr><scrAvg unfmt="7350"> 73.50</scrAvg><totMoney></totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="3">         3</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="26">        26</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="26">        26</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>297</stid><stValue unfmt="4">         4</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="5">         5</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="2">         2</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>450</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="1">         1</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>08/08/2010</endDate><trn trnNum="180" permNum="023" officialFlg="Y" trnName="Preferred Wichita Open" statCalcFlag="N"></trn><finPos unfmt="37" fmt="T37" playoffFlg=""/><offMoney unfmt="293250">     2932.50</offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>68</rndScr><posInField> T36</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>68</rndScr><posInField> T37</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>64</rndScr><posInField> T11</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>72</rndScr><posInField> T37</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>006</posLastRound><totalScr>272</totalScr><relToPar>-12</relToPar></scr><scrAvg unfmt="6800"> 68.00</scrAvg><totMoney>     3432.50</totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="4">         4</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="35">        35</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="21">        21</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="2">         2</stValue></stat>
+<stat><stid>297</stid><stValue unfmt="8">         8</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="6">         6</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="3">         3</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="2">         2</stValue></stat>
+<stat><stid>450</stid><stValue unfmt="3">         3</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="2">         2</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>08/15/2010</endDate><trn trnNum="190" permNum="022" officialFlg="Y" trnName="Price Cutter Charity" statCalcFlag="N"></trn><finPos unfmt="47" fmt="T47" playoffFlg=""/><offMoney unfmt="224219">     2242.19</offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>71</rndScr><posInField> T90</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>68</rndScr><posInField> T52</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>70</rndScr><posInField> T48</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>69</rndScr><posInField> T47</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>012</posLastRound><totalScr>278</totalScr><relToPar>-10</relToPar></scr><scrAvg unfmt="6950"> 69.50</scrAvg><totMoney>     2242.19</totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="3">         3</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="69">        69</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="2">         2</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>297</stid><stValue unfmt="4">         4</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="10">        10</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="2">         2</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>450</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="2">         2</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>09/05/2010</endDate><trn trnNum="210" permNum="103" officialFlg="Y" trnName="Mylan Classic" statCalcFlag="N"></trn><finPos unfmt="977" fmt="Cut" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>74</rndScr><posInField>T112</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>70</rndScr><posInField> T85</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>144</totalScr><relToPar>+ 2</relToPar></scr><scrAvg unfmt="7200"> 72.00</scrAvg><totMoney>      500.00</totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="3">         3</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="20">        20</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="20">        20</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>297</stid><stValue unfmt="8">         8</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="8">         8</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="2">         2</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>450</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="1">         1</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>10/17/2010</endDate><trn trnNum="270" permNum="083" officialFlg="Y" trnName="Miccosukee Championship" statCalcFlag="N"></trn><finPos unfmt="50" fmt="T50" playoffFlg=""/><offMoney unfmt="205500">     2055.00</offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>66</rndScr><posInField>  T7</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>72</rndScr><posInField> T30</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>75</rndScr><posInField> T58</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>71</rndScr><posInField> T50</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>016</posLastRound><totalScr>284</totalScr><relToPar>E</relToPar></scr><scrAvg unfmt="7100"> 71.00</scrAvg><totMoney>     2055.00</totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="8">         8</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="41">        41</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="3">         3</stValue></stat>
+<stat><stid>297</stid><stValue unfmt="6">         6</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="6">         6</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="2">         2</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="1">         1</stValue></stat>
+<stat><stid>450</stid><stValue unfmt="2">         2</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="2">         2</stValue></stat>
+</profile></stats></trnDetail>
+</year></tour><dataExists>Y</dataExists></plr></plrs><!--16:54:53-->

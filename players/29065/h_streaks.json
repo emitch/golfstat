@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--17:00:48--><plrs><statList>
+<stat><stid>295</stid><stName>Best YTD 1-Putt or Better Streak</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+<stat><stid>294</stid><stName>Best YTD streak w/o a 3-Putt</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+<stat><stid>483</stid><stName>Current Streak w/o a 3-Putt</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+<stat><stid>296</stid><stName>Consecutive Sand Saves</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+<stat><stid>297</stid><stName>Consecutive Fairways Hit</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+<stat><stid>298</stid><stName>Consecutive Greens in Regulation</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+<stat><stid>452</stid><stName>Consecutive Holes below Par</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+<stat><stid>449</stid><stName>Consecutive Par 3 Birdies</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+<stat><stid>450</stid><stName>Consecutive Par 4 Birdies</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+<stat><stid>451</stid><stName>Consecutive Par 5 Birdies</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+</statList><plr plrNum="29065" last="Stockton" first="Brady" middle="" nickname="" full="Brady Stockton" currentYear="2013">
+<tour tourCodeLC="h" tourCodeUC="H" tourDesc="Web.com Tour">
+<year year = "2012">
+<trnDetail><endDate>03/11/2012</endDate><trn trnNum="030" permNum="107" officialFlg="Y" trnName="Chile Classic" statCalcFlag="N"></trn><finPos unfmt="977" fmt="CUT" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>71</rndScr><posInField> T60</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>72</rndScr><posInField> T87</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>143</totalScr><relToPar>- 1</relToPar></scr><scrAvg unfmt="7150"> 71.50</scrAvg><totMoney></totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>294</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>483</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>296</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>297</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>298</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>452</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>450</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="2">              2</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>04/08/2012</endDate><trn trnNum="050" permNum="101" officialFlg="Y" trnName="Soboba Golf Classic" statCalcFlag="N"></trn><finPos unfmt="977" fmt="CUT" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>80</rndScr><posInField>T146</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>75</rndScr><posInField>T133</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>155</totalScr><relToPar>+13</relToPar></scr><scrAvg unfmt="7750"> 77.50</scrAvg><totMoney></totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="4">              4</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="26">             26</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="26">             26</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>297</stid><stValue unfmt="5">              5</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>450</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>451</stid><stValue unfmt="1">              1</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>05/20/2012</endDate><trn trnNum="090" permNum="037" officialFlg="Y" trnName="BMW Charity Pro-Am" statCalcFlag="N"></trn><finPos unfmt="967" fmt="CUT" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>79</rndScr><posInField>T164</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>79</rndScr><posInField>T165</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>82</rndScr><posInField> 167</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>240</totalScr><relToPar>+25</relToPar></scr><scrAvg unfmt="8000"> 80.00</scrAvg><totMoney></totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="4">              4</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="27">             27</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="18">             18</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>297</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="3">              3</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>450</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="1">              1</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>06/10/2012</endDate><trn trnNum="110" permNum="095" officialFlg="Y" trnName="Mexico Open" statCalcFlag="N"></trn><finPos unfmt="977" fmt="CUT" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>76</rndScr><posInField>T108</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>76</rndScr><posInField>T114</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>152</totalScr><relToPar>+ 8</relToPar></scr><scrAvg unfmt="7600"> 76.00</scrAvg><totMoney></totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>294</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>483</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>296</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>297</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>298</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>452</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>450</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="1">              1</stValue></stat>
+</profile></stats></trnDetail>
+</year>
+<year year = "2013">
+<trnDetail><endDate>04/07/2013</endDate><trn trnNum="050" permNum="108" officialFlg="Y" trnName="Brasil Classic" statCalcFlag="N"></trn><finPos unfmt="977" fmt="CUT" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>75</rndScr><posInField>T128</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>67</rndScr><posInField> T89</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>142</totalScr><relToPar>E</relToPar></scr><scrAvg unfmt="7100"> 71.00</scrAvg><totMoney></totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>294</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>483</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>296</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>297</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>298</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>452</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>450</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="1">              1</stValue></stat>
+</profile></stats></trnDetail>
+</year></tour><dataExists>Y</dataExists></plr></plrs><!--17:00:48-->

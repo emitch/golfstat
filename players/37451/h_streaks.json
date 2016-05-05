@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--18:42:14--><plrs><statList>
+<stat><stid>295</stid><stName>Best YTD 1-Putt or Better Streak</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+<stat><stid>294</stid><stName>Best YTD streak w/o a 3-Putt</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+<stat><stid>483</stid><stName>Current Streak w/o a 3-Putt</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+<stat><stid>296</stid><stName>Consecutive Sand Saves</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+<stat><stid>297</stid><stName>Consecutive Fairways Hit</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+<stat><stid>298</stid><stName>Consecutive Greens in Regulation</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+<stat><stid>452</stid><stName>Consecutive Holes below Par</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+<stat><stid>449</stid><stName>Consecutive Par 3 Birdies</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+<stat><stid>450</stid><stName>Consecutive Par 4 Birdies</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+<stat><stid>451</stid><stName>Consecutive Par 5 Birdies</stName><stSort>A</stSort><stSelect>Y</stSelect></stat>
+</statList><plr plrNum="37451" last="Fielding" first="Dusty" middle="" nickname="" full="Dusty Fielding" currentYear="2013">
+<tour tourCodeLC="h" tourCodeUC="H" tourDesc="Web.com Tour">
+<year year = "2013">
+<trnDetail><endDate>02/24/2013</endDate><trn trnNum="010" permNum="084" officialFlg="Y" trnName="Panama Claro Championship" statCalcFlag="N"></trn><finPos unfmt="977" fmt="CUT" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>71</rndScr><posInField> T53</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>73</rndScr><posInField> T79</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>144</totalScr><relToPar>+ 4</relToPar></scr><scrAvg unfmt="7200"> 72.00</scrAvg><totMoney></totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>294</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>483</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>296</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>297</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>298</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>452</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>450</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="1">              1</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>03/03/2013</endDate><trn trnNum="020" permNum="104" officialFlg="Y" trnName="Colombia Championship" statCalcFlag="N"></trn><finPos unfmt="7" fmt="T7" playoffFlg=""/><offMoney unfmt="2108750">    21087.50</offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>70</rndScr><posInField> T53</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>71</rndScr><posInField> T53</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>65</rndScr><posInField> T13</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>69</rndScr><posInField>  T7</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>275</totalScr><relToPar>- 9</relToPar></scr><scrAvg unfmt="6875"> 68.75</scrAvg><totMoney>    21087.50</totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>294</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>483</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>296</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>297</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>298</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>452</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>450</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="3">              3</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>03/10/2013</endDate><trn trnNum="030" permNum="107" officialFlg="Y" trnName="Chile Classic" statCalcFlag="N"></trn><finPos unfmt="977" fmt="CUT" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>77</rndScr><posInField>T141</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>74</rndScr><posInField> 142</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>151</totalScr><relToPar>+ 7</relToPar></scr><scrAvg unfmt="7550"> 75.50</scrAvg><totMoney></totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>294</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>483</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>296</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>297</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>298</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>452</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>450</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="2">              2</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>03/24/2013</endDate><trn trnNum="040" permNum="036" officialFlg="Y" trnName="Chitimacha Louisiana Open" statCalcFlag="N"></trn><finPos unfmt="977" fmt="CUT" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>74</rndScr><posInField>T108</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>72</rndScr><posInField>T123</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>146</totalScr><relToPar>+ 4</relToPar></scr><scrAvg unfmt="7300"> 73.00</scrAvg><totMoney></totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="20">             20</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="12">             12</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>297</stid><stValue unfmt="3">              3</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="4">              4</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>450</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="4">              4</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>04/14/2013</endDate><trn trnNum="060" permNum="038" officialFlg="Y" trnName="WNB Golf Classic" statCalcFlag="N"></trn><finPos unfmt="977" fmt="CUT" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>71</rndScr><posInField> T42</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>74</rndScr><posInField>T109</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>145</totalScr><relToPar>+ 1</relToPar></scr><scrAvg unfmt="7250"> 72.50</scrAvg><totMoney></totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="23">             23</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="3">              3</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>297</stid><stValue unfmt="7">              7</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="4">              4</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>450</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="3">              3</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>04/28/2013</endDate><trn trnNum="070" permNum="092" officialFlg="Y" trnName="South Georgia Classic" statCalcFlag="N"></trn><finPos unfmt="39" fmt="T39" playoffFlg=""/><offMoney unfmt="305500">     3055.00</offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>68</rndScr><posInField>  T5</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>72</rndScr><posInField> T12</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>75</rndScr><posInField> T33</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>73</rndScr><posInField> T39</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>288</totalScr><relToPar>E</relToPar></scr><scrAvg unfmt="7200"> 72.00</scrAvg><totMoney>     3555.00</totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="8">              8</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="40">             40</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="17">             17</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="3">              3</stValue></stat>
+<stat><stid>297</stid><stValue unfmt="6">              6</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="7">              7</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="3">              3</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>450</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="3">              3</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>05/05/2013</endDate><trn trnNum="080" permNum="090" officialFlg="Y" trnName="Stadion Classic at UGA" statCalcFlag="N"></trn><finPos unfmt="977" fmt="CUT" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>73</rndScr><posInField> T89</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>78</rndScr><posInField>T143</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>151</totalScr><relToPar>+ 9</relToPar></scr><scrAvg unfmt="7550"> 75.50</scrAvg><totMoney></totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="20">             20</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="6">              6</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>297</stid><stValue unfmt="6">              6</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="6">              6</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>450</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="2">              2</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>05/19/2013</endDate><trn trnNum="090" permNum="037" officialFlg="Y" trnName="BMW Charity Pro-Am" statCalcFlag="N"></trn><finPos unfmt="60" fmt="60" playoffFlg=""/><offMoney unfmt="195000">     1950.00</offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>71</rndScr><posInField> T99</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>63</rndScr><posInField> T13</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>71</rndScr><posInField> T45</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>71</rndScr><posInField>  60</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>276</totalScr><relToPar>-10</relToPar></scr><scrAvg unfmt="6900"> 69.00</scrAvg><totMoney>     1950.00</totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="5">              5</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="55">             55</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="55">             55</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>297</stid><stValue unfmt="10">             10</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="9">              9</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>450</stid><stValue unfmt="3">              3</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="5">              5</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>05/26/2013</endDate><trn trnNum="100" permNum="095" officialFlg="Y" trnName="Mexico Championship" statCalcFlag="N"></trn><finPos unfmt="989" fmt="W/D" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>85</rndScr><posInField>T141</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>0</rndScr><posInField> W/D</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>0</rndScr><posInField> W/D</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField> W/D</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr> 85</totalScr><relToPar>+13</relToPar></scr><scrAvg unfmt="8500"> 85.00</scrAvg><totMoney></totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>294</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>483</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>296</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>297</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>298</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>452</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>450</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>451</stid><stValue unfmt="1">              1</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>06/02/2013</endDate><trn trnNum="110" permNum="093" officialFlg="Y" trnName="Mid-Atlantic Championship" statCalcFlag="N"></trn><finPos unfmt="977" fmt="CUT" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>71</rndScr><posInField> T48</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>77</rndScr><posInField>T101</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>148</totalScr><relToPar>+ 8</relToPar></scr><scrAvg unfmt="7400"> 74.00</scrAvg><totMoney></totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="3">              3</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="22">             22</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>296</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>297</stid><stValue unfmt="4">              4</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="3">              3</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>450</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="0"></stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>06/16/2013</endDate><trn trnNum="120" permNum="023" officialFlg="Y" trnName="Air Capital Classic" statCalcFlag="N"></trn><finPos unfmt="977" fmt="CUT" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>69</rndScr><posInField> T26</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>79</rndScr><posInField>T137</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>148</totalScr><relToPar>+ 6</relToPar></scr><scrAvg unfmt="7400"> 74.00</scrAvg><totMoney></totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="3">              3</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="32">             32</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="3">              3</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>297</stid><stValue unfmt="5">              5</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="3">              3</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>450</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="3">              3</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>06/23/2013</endDate><trn trnNum="130" permNum="048" officialFlg="Y" trnName="Rex Hospital Open" statCalcFlag="N"></trn><finPos unfmt="977" fmt="CUT" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>74</rndScr><posInField>T134</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>78</rndScr><posInField>T154</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>152</totalScr><relToPar>+10</relToPar></scr><scrAvg unfmt="7600"> 76.00</scrAvg><totMoney>     1000.00</totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="3">              3</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="22">             22</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="6">              6</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>297</stid><stValue unfmt="4">              4</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="3">              3</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>450</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="1">              1</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>06/30/2013</endDate><trn trnNum="140" permNum="106" officialFlg="Y" trnName="United Leasing Championsh" statCalcFlag="N"></trn><finPos unfmt="977" fmt="CUT" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>73</rndScr><posInField> T72</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>73</rndScr><posInField> T74</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>146</totalScr><relToPar>+ 2</relToPar></scr><scrAvg unfmt="7300"> 73.00</scrAvg><totMoney></totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="5">              5</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="29">             29</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="3">              3</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>297</stid><stValue unfmt="10">             10</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="6">              6</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>450</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="3">              3</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>07/14/2013</endDate><trn trnNum="150" permNum="026" officialFlg="Y" trnName="Utah Championship" statCalcFlag="N"></trn><finPos unfmt="977" fmt="CUT" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>68</rndScr><posInField> T38</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>69</rndScr><posInField> T64</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>137</totalScr><relToPar>- 5</relToPar></scr><scrAvg unfmt="6850"> 68.50</scrAvg><totMoney>      500.00</totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="36">             36</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="36">             36</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>297</stid><stValue unfmt="3">              3</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="9">              9</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="3">              3</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>450</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="4">              4</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>07/21/2013</endDate><trn trnNum="160" permNum="100" officialFlg="Y" trnName="Midwest Classic" statCalcFlag="N"></trn><finPos unfmt="78" fmt="T78" playoffFlg=""/><offMoney unfmt="124500">     1245.00</offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>71</rndScr><posInField> T68</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>70</rndScr><posInField> T58</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>74</rndScr><posInField>  78</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>75</rndScr><posInField> T78</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>290</totalScr><relToPar>+ 6</relToPar></scr><scrAvg unfmt="7250"> 72.50</scrAvg><totMoney>     1245.00</totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="4">              4</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="31">             31</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="14">             14</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="3">              3</stValue></stat>
+<stat><stid>297</stid><stValue unfmt="5">              5</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="4">              4</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>450</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="1">              1</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>07/28/2013</endDate><trn trnNum="170" permNum="027" officialFlg="Y" trnName="Albertsons Boise Open" statCalcFlag="N"></trn><finPos unfmt="73" fmt="73" playoffFlg=""/><offMoney unfmt="182125">     1821.25</offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>72</rndScr><posInField>T127</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>63</rndScr><posInField> T38</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>73</rndScr><posInField> T73</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>73</rndScr><posInField>  73</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>281</totalScr><relToPar>- 3</relToPar></scr><scrAvg unfmt="7025"> 70.25</scrAvg><totMoney>     1821.25</totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="6">              6</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="35">             35</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="33">             33</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="4">              4</stValue></stat>
+<stat><stid>297</stid><stValue unfmt="5">              5</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="8">              8</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="4">              4</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>450</stid><stValue unfmt="3">              3</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="4">              4</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>08/04/2013</endDate><trn trnNum="180" permNum="103" officialFlg="Y" trnName="Mylan Classic" statCalcFlag="N"></trn><finPos unfmt="977" fmt="CUT" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>74</rndScr><posInField> T97</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>74</rndScr><posInField>T112</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>148</totalScr><relToPar>+ 6</relToPar></scr><scrAvg unfmt="7400"> 74.00</scrAvg><totMoney></totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="4">              4</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="9">              9</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="3">              3</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>297</stid><stValue unfmt="4">              4</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="6">              6</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>450</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="1">              1</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>08/11/2013</endDate><trn trnNum="190" permNum="022" officialFlg="Y" trnName="Price Cutter Charity" statCalcFlag="N"></trn><finPos unfmt="977" fmt="CUT" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>73</rndScr><posInField>T129</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>73</rndScr><posInField>T134</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>146</totalScr><relToPar>+ 2</relToPar></scr><scrAvg unfmt="7300"> 73.00</scrAvg><totMoney>      500.00</totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="5">              5</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="19">             19</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="16">             16</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>297</stid><stValue unfmt="4">              4</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="8">              8</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>450</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="1">              1</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>08/18/2013</endDate><trn trnNum="200" permNum="011" officialFlg="Y" trnName="News Sentinel Open" statCalcFlag="N"></trn><finPos unfmt="977" fmt="CUT" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>73</rndScr><posInField>T112</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>85</rndScr><posInField> 154</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>158</totalScr><relToPar>+16</relToPar></scr><scrAvg unfmt="7900"> 79.00</scrAvg><totMoney>      500.00</totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="3">              3</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="23">             23</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="3">              3</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>297</stid><stValue unfmt="6">              6</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="8">              8</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>450</stid><stValue unfmt="0"></stValue></stat>
+<stat><stid>451</stid><stValue unfmt="1">              1</stValue></stat>
+</profile></stats></trnDetail>
+<trnDetail><endDate>08/25/2013</endDate><trn trnNum="210" permNum="059" officialFlg="Y" trnName="Cox Classic" statCalcFlag="N"></trn><finPos unfmt="977" fmt="CUT" playoffFlg=""/><offMoney unfmt="0"></offMoney><ssFinPos unfmt="999" fmt="999"/><ssMoney unfmt="0"></ssMoney>
+<scr><rounds><rnd><rndNum>1</rndNum><rndScr>71</rndScr><posInField>T107</posInField></rnd><rnd><rndNum>2</rndNum><rndScr>69</rndScr><posInField> T81</posInField></rnd><rnd><rndNum>3</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd>
+<rnd><rndNum>4</rndNum><rndScr>0</rndScr><posInField> CUT</posInField></rnd><rnd><rndNum>5</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+<rnd><rndNum>6</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>7</rndNum><rndScr>0</rndScr><posInField></posInField></rnd><rnd><rndNum>8</rndNum><rndScr>0</rndScr><posInField></posInField></rnd>
+</rounds><posLastRound>999</posLastRound><totalScr>140</totalScr><relToPar>- 2</relToPar></scr><scrAvg unfmt="7000"> 70.00</scrAvg><totMoney></totMoney><amateurStatus>N</amateurStatus><stats><profile cat="STR">
+<stat><stid>295</stid><stValue unfmt="3">              3</stValue></stat>
+<stat><stid>294</stid><stValue unfmt="12">             12</stValue></stat>
+<stat><stid>483</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>296</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>297</stid><stValue unfmt="4">              4</stValue></stat>
+<stat><stid>298</stid><stValue unfmt="12">             12</stValue></stat>
+<stat><stid>452</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>449</stid><stValue unfmt="1">              1</stValue></stat>
+<stat><stid>450</stid><stValue unfmt="2">              2</stValue></stat>
+<stat><stid>451</stid><stValue unfmt="2">              2</stValue></stat>
+</profile></stats></trnDetail>
+</year></tour><dataExists>Y</dataExists></plr></plrs><!--18:42:14-->

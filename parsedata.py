@@ -1,11 +1,15 @@
 import sys, os, json
 from pprint import pprint
 import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+import pylab as pl
+import imageio
 
 # stat names corresponding to rankings, should be exluded in stat gathering
 rank_stats = ['All-Around Ranking', 'FedExCup Season Points', 'Money Leaders']
 
-def player_data_from_years(years, require_min_rounds=False):
+def player_data_from_years(years, require_min_rounds=True):
     # Find files matching a given year
     selected_files = []
     cwd = os.getcwd()
@@ -32,10 +36,16 @@ def player_data_from_years(years, require_min_rounds=False):
         file.close()
 
         # extract essentials from the json dictionary
-        player_name = json_data['plrs'][0]['plrName']
-        player_number = json_data['plrs'][0]['plrNum']
-        player_year = json_data['plrs'][0]['years'][0]['year']
-
+        try:
+            player_name = json_data['plrs'][0]['plrName']
+            player_number = json_data['plrs'][0]['plrNum']
+            player_year = json_data['plrs'][0]['years'][0]['year']
+        except:
+            sys.stdout.write('\r')
+            print(f)
+            continue
+            
+        sys.stdout.write('\r%s\t%s' % (player_number, player_year))
         # clean up dictionary
         sanitized = {}
         for tour in json_data['plrs'][0]['years'][0]['tours']:
@@ -206,7 +216,7 @@ def gather(years, stat_as_index=None, index_as_stat=None):
     if stat_as_index is None or index_as_stat is None:
         stat_as_index, index_as_stat, _, _ = index_stats_in_data()
     data = player_data_from_years(years)
-
+    
     # convert to matrix and get ranks
     ranks = extract_player_ranks(data)
     # names = extract_player_names(data)
@@ -214,12 +224,63 @@ def gather(years, stat_as_index=None, index_as_stat=None):
 
     return stats, ranks, index_as_stat, stat_as_index
 
+def show_stat_over_time(data, stat_name, years):
+    stat_distributions_by_year = {}
+    for year in years:
+        stat_distributions_by_year[year] = {}
+    
+    min = 999999
+    max = -9999
+    for player_data in data:
+        stats = player_data['stats']
+        for stat in stats:
+            year = player_data['year']
+            if year in years:
+                if stat not in stat_distributions_by_year[year]:
+                    stat_distributions_by_year[year][stat] = []
+                stat_distributions_by_year[year][stat].append(stats[stat]['value'])
+                if stat == stat_name:
+                    value = stats[stat]['value'].replace('%', '').replace('$', '').replace(',', '')
+                    value = float(value)
+                    
+                    if value < min: min = value
+                    if value > max: max = value
+    
+    print('\nFound:')
+    for stat in stat_distributions_by_year[years[0]]: print(stat)
+    print('---------------\nBuilding GIF for', stat_name)
+    
+    image_files = []
+    
+    writer = imageio.get_writer(os.getcwd() + '/' + stat_name + '.gif', fps=5)
+    
+    for idx, year in enumerate(years):
+        if stat_name in stat_distributions_by_year[year]:
+            dist = [float(s.replace('%', '').replace('$', '').replace(',', '')) for s in stat_distributions_by_year[year][stat_name]]
+            plt.figure()
+            plt.hist(dist, bins=30, range=[min, max])
+            plt.title(year + ' ' + stat_name + ' ' + "{0:.2f}".format(sum(dist)/len(dist)))
+            name = str(idx) + '.png'
+            plt.savefig(name, bbox_inches='tight')
+            writer.append_data(imageio.imread(os.getcwd() + '/' + name))
+            os.remove(os.getcwd() + '/' + name)
+    
+    writer.close()
+    
+    print('Successfully built GIF for', stat_name)
+
 if __name__ == "__main__":
     # Re-index stats
-    index_stats_in_data(reindex=True)
-
+    # index_stats_in_data(reindex=True)
+    
     # The years we want to look at
-    years = ['2013', '2014', '2015']
-    stat_matrix, rank_matrix, index_as_stat, stat_names = gather(years)
+    years = [str(y) for y in range(1985, 2016)]
+    
+    data = player_data_from_years(years)
+    
+    show_stat_over_time(data, 'Driving Distance', years)
+    
+    
+    # stat_matrix, rank_matrix, index_as_stat, stat_names = gather(years)
 
-    print('Found %i records with %i unique stats' % stat_matrix.shape)
+    # print('Found %i records with %i unique stats' % stat_matrix.shape)
