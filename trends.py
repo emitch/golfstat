@@ -1,4 +1,4 @@
-import os, sys, scipy
+import os, sys, scipy.stats
 import numpy as np
 import matplotlib.pyplot as plt
 from parsedata import gather, index_features_in_data

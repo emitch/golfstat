@@ -55,7 +55,23 @@ def scrape_scorecards():
 
 def scrape_courses():
     """ get the par and distance information for each course used in the
-    tournaments with scorecard data """
+    tournaments with scorecard data.  scrape scorecards must be run first
+    as we use the existing local folder structure to build the urls """
+    # pga tour data endpoint
+    baseurl = 'http://www.pgatour.com/data/r/'
+    # iterate through tournament folders
+    for tourn in os.listdir('scorecards/'):
+        # skip hidden folders
+        if tourn.startswith('.'): continue
+        for year in os.listdir('scorecards/{0}/'.format(tourn)):
+            # skip hidden folders
+            if year.startswith('.'): continue
+            # current location in folder structure
+            path = tourn + '/' + year + '/course.json'
+            print('Scraping %s\r' % path, end='')
+            # concatenate with baseurl to get endpoint
+            data = requests.get(baseurl + path).text
+            with open('scorecards/' + path, 'w') as file: file.write(data)
 
 
 def compile_scorecards():
@@ -63,4 +79,5 @@ def compile_scorecards():
     return None
 
 if __name__ == '__main__':
-    scrape_scorecards()
+    scrape_courses()
+
