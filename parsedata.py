@@ -57,7 +57,7 @@ def player_data_from_years(years, require_min_rounds=False):
 
     return data
 
-def index_stats_in_data(reindex=False, required_fraction=0.8):
+def index_stats_in_data(reindex=False, required_fraction=0.5):
     """ create a single mapping from stats to integers that will
     be the same in all years.  To do this, run the indexing on
     the entire corpus and save the result to a file """
@@ -143,28 +143,6 @@ def select_records_with_stats(records, stats):
 
     return passing_records
 
-"""
-# TODO: combine this with index_stats_in_data
-# THIS IS BROKEN, don't use with other functions
-def extract_good_stats(appearances, stat_as_index, data, exclude=None):
-    # Prune stats that don't show up in at least 80% of the entries
-    num_records = len(data)
-    required_percent = .8
-    good_stats = {}
-    for stat in stat_map:
-        if stat in exclude: continue
-        num_app = appearances[stat]
-        if num_app > required_percent * num_records:
-            good_stats[stat] = stat_as_index[stat]
-
-    # # re-index
-    # for stat, idx in zip(good_stats, range(len(good_stats))):
-    #     good_stats[stat] = idx
-
-    # dictionary mapping stats to indices
-    return good_stats
-"""
-
 def build_stat_matrix(data, stat_as_index):
     """ Convert stat dictionaries to 2D arrays
     each row is a specific player and each column a specific stat """
@@ -228,10 +206,6 @@ def gather(years, stat_as_index=None, index_as_stat=None):
     if stat_as_index is None or index_as_stat is None:
         stat_as_index, index_as_stat, _, _ = index_stats_in_data()
     data = player_data_from_years(years)
-    # # clean ups
-    # exclude = ['All-Around Ranking', 'FedExCup Season Points', 'Money Leaders']
-    # good_stats = extract_good_stats(stat_map, data, exclude)
-    # data = select_records_with_stats(data, good_stats, stat_map)
 
     # convert to matrix and get ranks
     ranks = extract_player_ranks(data)
@@ -241,6 +215,9 @@ def gather(years, stat_as_index=None, index_as_stat=None):
     return stats, ranks, index_as_stat, stat_as_index
 
 if __name__ == "__main__":
+    # Re-index stats
+    index_stats_in_data(reindex=True)
+
     # The years we want to look at
     years = ['2013', '2014', '2015']
     stat_matrix, rank_matrix, index_as_stat, stat_names = gather(years)

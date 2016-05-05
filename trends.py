@@ -2,8 +2,9 @@ import os, sys, scipy.stats
 import numpy as np
 import matplotlib.pyplot as plt
 from parsedata import gather, index_stats_in_data
-from sklearn.linear_model import LinearRegression, Lasso, Ridge
+from sklearn.linear_model import LinearRegression, Lasso, LassoCV, Ridge, RidgeCV
 from sklearn.cross_validation import LeaveOneOut
+from sklearn.preprocessing import Imputer
 
 # stat names corresponding to rankings, should be exluded in stat gathering
 rank_stats = ['All-Around Ranking', 'FedExCup Season Points', 'Money Leaders']
@@ -44,25 +45,80 @@ def ordinal_loo(stats, rankings, model=LinearRegression()):
     n_rankings = rankings.shape[1]  # should always be 3
     errs = np.empty([n_obs, n_rankings])
 
+    # impute stats and rankings
+    stats = Imputer().fit_transform(stats)
+    rankings[np.isnan(rankings)] = 999
+
     loo = LeaveOneOut(n_obs)
     for train, test in loo:
         # fit given model
-        mod = model
-        mod.fit(stats[train, :], rankings[train, i])
+        reg = model
+        reg.fit(stats[train, :], rankings[train, :])
         # test on held-out data point
-        pred_rank = mod.predict(stats[test])
+        pred_rank = reg.predict(stats[test, :])
         errs[test,:] = pred_rank - rankings[test]
-        # TODO: better quantification of error
+        # TODO: better quantification of error?
 
-    # TODO: analyze coefficients etc.
+    # fit on entire dataset and return coefficients
+    reg = model
+    reg.fit(stats, rankings)
 
-    return errs
+    return reg.coef_, errs
+
+def coefs_over_time(start, end, stats_list=None, model=LinearRegression()):
+    """" BROKEN FOR START < 1985.  NEED TO FIX IMPUTATION/NaN-HANDLING"""
+    # index stats once
+    if stats_list is None:
+        # get all stats from big index thing
+        stat_as_index, index_as_stat, _, _ = index_stats_in_data()
+    else:
+        # make a temporary index of the stats we want to see
+        # TODO: detect which stats are interesting and use those
+        stat_as_index = {}
+        index_as_stat = [None] * len(stats_list)
+        for i, stat in enumerate(stats_list):
+            stat_as_index[stat] = i
+            index_as_stat[i] = stat
+
+    n_stats = len(stat_as_index)
+    n_rankings = 3
+    n_years = end-start+1
+
+    # initialize 3D numpy array to hold correlations for each year
+    coefs = np.empty([n_rankings, n_stats, n_years], dtype=float)
+    errs = np.empty([n_rankings, n_years], dtype=float)
+    for year in range(start, end+1):
+        print('Fitting models for %d\r' % year, end="")
+        # get the good good
+        stats, ranks, _, _ = gather(
+            [str(year)], stat_as_index, index_as_stat)
+
+        coefs[:, :, year-start], err = ordinal_loo(stats, ranks)
+        errs[:, year-start] = np.mean(err)
+
+    # Each correlation over time is a slice along dimension 3
+    for rank in range(n_rankings):
+        fig = plt.figure(figsize=(12,8))
+        for stat in range(n_stats):
+            plt.plot(range(start, end+1), coefs[rank, stat, :], '-')
+        plt.title('Regression dependence of ' + rank_stats[rank] + ' over time by stat')
+        plt.xlabel('Year')
+        plt.ylabel('Regression Coefficients')
+        # shrink box and make legend,
+        ax = beautify(fig)
+        box = ax.get_position()
+        ax.set_position([box.x0, box.y0, box.width * 0.75, box.height])
+        plt.legend(index_as_stat, frameon=False,
+            bbox_to_anchor=(1.0, 0.75), loc=2, mode='expand')
+
+    plt.show()
+    return coefs, errs
 
 def correlations_over_time(start, end, stats_list=None):
     # index stats once
     if stats_list is None:
         # get all stats from big index thing
-        stat_as_index, index_as_stat, _ = index_stats_in_data()
+        stat_as_index, index_as_stat, _, _ = index_stats_in_data()
     else:
         # make a temporary index of the stats we want to see
         # TODO: detect which stats are interesting and use those
@@ -133,4 +189,5 @@ if __name__ == "__main__":
     ###########################################
     print('Tracking stats ')
     interesting_stats = ordered_stats[:9]
-    correlations_over_time(1980, 2015, interesting_stats)
+    #correlations_over_time(1980, 2015, interesting_stats)
+    coefs_over_time(1985, 2013, model=LassoCV())
