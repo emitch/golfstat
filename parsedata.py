@@ -9,8 +9,7 @@ import imageio
 # stat names corresponding to rankings, should be exluded in stat gathering
 rank_stats = ['All-Around Ranking', 'FedExCup Season Points', 'Money Leaders']
 
-def player_data_from_years(years, require_min_rounds=True):
-    # Find files matching a given year
+def stat_files_for_years(years):
     selected_files = []
     cwd = os.getcwd()
     # Iterate through player folders
@@ -25,9 +24,52 @@ def player_data_from_years(years, require_min_rounds=True):
                 if data_file.startswith(year) and data_file.endswith('stat.json'):
                     selected_files.append(
                         cwd + '/players/' + player_folder + '/' + data_file)
+                        
+    return selected_files
+
+def tournament_files_for_years(years):
+    selected_files = []
+    cwd = os.getcwd()
+    tournaments_by_year = {}
+    
+    # Iterate through tournaments
+    for tournament_folder in os.listdir(cwd + '/scorecards'):
+        # skip hidden folders
+        if tournament_folder.startswith('.'): continue
+        
+        # get years for this tournament
+        year_folders = os.listdir(cwd + '/scorecards/' + tournament_folder)
+        
+        tournaments_by_year[tournament_folder] = {}
+        
+        # select files for given years
+        for year_folder in year_folders:
+            # skip years we don't need
+            if year_folder not in years: continue
+            
+            tournaments_by_year[tournament_folder][year_folder] = []
+            
+            # skip hidden folders
+            if tournament_folder.startswith('.'): continue
+            
+            player_files = os.listdir(cwd + '/scorecards/' + tournament_folder + '/' + year_folder)
+            
+            # finally we have all of the players
+            for player_file in player_files:
+                tournaments_by_year[tournament_folder][year_folder].append({'f': cwd + '/scorecards/' + tournament_folder + '/' + year_folder + '/' + player_file, 'id': player_file.split('.')[0]})
+    
+    return tournaments_by_year
+
+def player_data_from_years(years, require_min_rounds=True, dict_by_id=False):
+    # Find files matching a given year
+    selected_files = stat_files_for_years(years)
 
     # An array of play stat dicts and values of dictionaries of stats
-    data = []
+    if dict_by_id:
+        data = {}
+    else:
+        data = []
+        
     # Iterate through found files and parse
     for f in selected_files:
         # read json file
@@ -61,10 +103,77 @@ def player_data_from_years(years, require_min_rounds=True):
                         sanitized[name] = {'rank': stat['rank'], 'value': stat['value']}
 
         if len(sanitized):
-            data.append({'name': player_name, 'id': player_number, \
-                'year': player_year, 'stats': sanitized})
+            if dict_by_id:
+                if player_number not in data:
+                    data[player_number] = {'name': player_name, 'years': {}}
+                
+                if player_year not in data[player_number]:
+                    data[player_number][player_year] = {}
+                
+                data[player_number][player_year]['stats'] = sanitized
+            else:
+                data.append({'name': player_name, 'id': player_number, \
+                    'year': player_year, 'stats': sanitized})
             # data[player_name + '_' + player_number + '_' + player_year] = sanitized
-
+            
+    print('')
+    
+    # NOW WE HAVE A DICT OF STATS
+    # READ IN TOURNAMENT DATA
+    tournament_file_dict = tournament_files_for_years(years)
+    
+    for tournament in tournament_file_dict:
+        print('=====================')
+        print('Tournament %s' % (tournament))
+        for year in tournament_file_dict[tournament]:
+            print('Got data from %s' % (year))
+            for idx, player in enumerate(tournament_file_dict[tournament][year]):
+                pid = player['id']
+                if pid in data and year in data[pid]:
+                    file = open(tournament_file_dict[tournament][year][idx]['f'], 'r')
+                    scorecard_data = json.load(file)
+                    file.close()
+                    
+                    player = tournament_file_dict[tournament][year][idx]['id']
+                    
+                    this_player_tournament_data = {}
+                        
+                    # print('Player %s' % (pid))
+                    
+                    this_player_tournament_data['scorecard'] = scorecard_data
+                    summary = {}
+                    
+                    total_rounds = len(scorecard_data['p']['rnds'])
+                    
+                    # print('\t%s rounds' % (total_rounds))
+                    
+                    hole_scores = []
+                    
+                    valid_data = True
+                    
+                    for round in scorecard_data['p']['rnds']:
+                        for hole in round['holes']:
+                            if len(hole['sc']) == 0:
+                                valid_data = False
+                                break
+                                
+                            hole_scores.append(int(hole['sc']))
+                            
+                    # print('\tTotal Shots: %i' % (sum(hole_scores)))
+                    
+                    if valid_data == False:
+                        continue
+                        
+                    if total_rounds != 2 and total_rounds != 4:
+                        continue
+                    
+                    summary['num_rounds'] = str(total_rounds)
+                    summary['total_shots'] = str(sum(hole_scores))
+                    
+                    this_player_tournament_data['summary'] = summary
+                    
+                    data[pid][year][tournament] = this_player_tournament_data
+    
     return data
 
 def index_stats_in_data(reindex=False, required_fraction=0.5):
@@ -274,11 +383,12 @@ if __name__ == "__main__":
     # index_stats_in_data(reindex=True)
     
     # The years we want to look at
-    years = [str(y) for y in range(1985, 2016)]
+    years = [str(y) for y in range(2013, 2016)]
     
-    data = player_data_from_years(years)
+    data = player_data_from_years(years, dict_by_id=True)
+    # pprint(data)
     
-    show_stat_over_time(data, 'Driving Distance', years)
+    # show_stat_over_time(data, 'Putts Per Round', years)
     
     
     # stat_matrix, rank_matrix, index_as_stat, stat_names = gather(years)
