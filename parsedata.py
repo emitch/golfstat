@@ -24,40 +24,40 @@ def stat_files_for_years(years):
                 if data_file.startswith(year) and data_file.endswith('stat.json'):
                     selected_files.append(
                         cwd + '/players/' + player_folder + '/' + data_file)
-                        
+
     return selected_files
 
 def tournament_files_for_years(years):
     selected_files = []
     cwd = os.getcwd()
     tournaments_by_year = {}
-    
+
     # Iterate through tournaments
     for tournament_folder in os.listdir(cwd + '/scorecards'):
         # skip hidden folders
         if tournament_folder.startswith('.'): continue
-        
+
         # get years for this tournament
         year_folders = os.listdir(cwd + '/scorecards/' + tournament_folder)
-        
+
         tournaments_by_year[tournament_folder] = {}
-        
+
         # select files for given years
         for year_folder in year_folders:
             # skip years we don't need
             if year_folder not in years: continue
-            
+
             tournaments_by_year[tournament_folder][year_folder] = []
-            
+
             # skip hidden folders
             if tournament_folder.startswith('.'): continue
-            
+
             player_files = os.listdir(cwd + '/scorecards/' + tournament_folder + '/' + year_folder)
-            
+
             # finally we have all of the players
             for player_file in player_files:
                 tournaments_by_year[tournament_folder][year_folder].append({'f': cwd + '/scorecards/' + tournament_folder + '/' + year_folder + '/' + player_file, 'id': player_file.split('.')[0]})
-    
+
     return tournaments_by_year
 
 def player_data_from_years(years, require_min_rounds=True, dict_by_id=False):
@@ -69,7 +69,7 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=False):
         data = {}
     else:
         data = []
-        
+
     # Iterate through found files and parse
     for f in selected_files:
         # read json file
@@ -86,7 +86,7 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=False):
             sys.stdout.write('\r')
             print(f)
             continue
-            
+
         sys.stdout.write('\r%s\t%s' % (player_number, player_year))
         # clean up dictionary
         sanitized = {}
@@ -106,22 +106,22 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=False):
             if dict_by_id:
                 if player_number not in data:
                     data[player_number] = {'name': player_name, 'years': {}}
-                
+
                 if player_year not in data[player_number]:
                     data[player_number][player_year] = {}
-                
+
                 data[player_number][player_year]['stats'] = sanitized
             else:
                 data.append({'name': player_name, 'id': player_number, \
                     'year': player_year, 'stats': sanitized})
             # data[player_name + '_' + player_number + '_' + player_year] = sanitized
-            
+
     print('')
-    
+
     # NOW WE HAVE A DICT OF STATS
     # READ IN TOURNAMENT DATA
     tournament_file_dict = tournament_files_for_years(years)
-    
+
     for tournament in tournament_file_dict:
         # Get the course data file
         print('=====================')
@@ -143,48 +143,48 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=False):
                     file = open(tournament_file_dict[tournament][year][idx]['f'], 'r')
                     scorecard_data = json.load(file)
                     file.close()
-                    
+
                     player = tournament_file_dict[tournament][year][idx]['id']
-                    
+
                     this_player_tournament_data = {}
-                        
+
                     # print('Player %s' % (pid))
-                    
+
                     this_player_tournament_data['scorecard'] = scorecard_data
                     summary = {}
-                    
+
                     total_rounds = len(scorecard_data['p']['rnds'])
-                    
+
                     # print('\t%s rounds' % (total_rounds))
-                    
+
                     hole_scores = []
-                    
+
                     valid_data = True
-                    
+
                     for round in scorecard_data['p']['rnds']:
                         for hole in round['holes']:
                             if len(hole['sc']) == 0:
                                 valid_data = False
                                 break
-                                
+
                             hole_scores.append(int(hole['sc']))
-                            
+
                     # print('\tTotal Shots: %i' % (sum(hole_scores)))
-                    
+
                     if valid_data == False:
                         continue
-                        
+
                     if total_rounds != 2 and total_rounds != 4:
                         continue
-                    
+                        
                     summary['num_rounds'] =     str(total_rounds)
                     summary['total_shots'] =    str(sum(hole_scores))
                     summary['course_name'] =    course_name
                     
                     this_player_tournament_data['summary'] = summary
-                    
+
                     data[pid][year][tournament] = this_player_tournament_data
-    
+
     return data
 
 def index_stats_in_data(reindex=False, required_fraction=0.5):
@@ -336,7 +336,7 @@ def gather(years, stat_as_index=None, index_as_stat=None):
     if stat_as_index is None or index_as_stat is None:
         stat_as_index, index_as_stat, _, _ = index_stats_in_data()
     data = player_data_from_years(years)
-    
+
     # convert to matrix and get ranks
     ranks = extract_player_ranks(data)
     # names = extract_player_names(data)
@@ -348,9 +348,9 @@ def show_stat_over_time(data, stat_name, years):
     stat_distributions_by_year = {}
     for year in years:
         stat_distributions_by_year[year] = {}
-    
-    min = 999999
-    max = -9999
+
+    min_val = sys.maxint
+    max_val = -sys.maxint
     for player_data in data:
         stats = player_data['stats']
         for stat in stats:
@@ -362,18 +362,18 @@ def show_stat_over_time(data, stat_name, years):
                 if stat == stat_name:
                     value = stats[stat]['value'].replace('%', '').replace('$', '').replace(',', '')
                     value = float(value)
-                    
-                    if value < min: min = value
-                    if value > max: max = value
-    
+
+                    if value < min_val: min_val = value
+                    if value > max_val: max_val = value
+
     print('\nFound:')
     for stat in stat_distributions_by_year[years[0]]: print(stat)
     print('---------------\nBuilding GIF for', stat_name)
-    
+
     image_files = []
-    
+
     writer = imageio.get_writer(os.getcwd() + '/' + stat_name + '.gif', fps=5)
-    
+
     for idx, year in enumerate(years):
         if stat_name in stat_distributions_by_year[year]:
             dist = [float(s.replace('%', '').replace('$', '').replace(',', '')) for s in stat_distributions_by_year[year][stat_name]]
@@ -384,24 +384,23 @@ def show_stat_over_time(data, stat_name, years):
             plt.savefig(name, bbox_inches='tight')
             writer.append_data(imageio.imread(os.getcwd() + '/' + name))
             os.remove(os.getcwd() + '/' + name)
-    
+
     writer.close()
-    
+
     print('Successfully built GIF for', stat_name)
 
 if __name__ == "__main__":
     # Re-index stats
-    # index_stats_in_data(reindex=True)
-    
+    index_stats_in_data(reindex=True)
+
     # The years we want to look at
     years = [str(y) for y in range(2013, 2017)]
     
     data = player_data_from_years(years, dict_by_id=True)
     # pprint(data)
-    
+
     # show_stat_over_time(data, 'Putts Per Round', years)
-    
-    
+
     # stat_matrix, rank_matrix, index_as_stat, stat_names = gather(years)
 
     # print('Found %i records with %i unique stats' % stat_matrix.shape)
