@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import pylab as pl
 import imageio
+import operator
 
 # stat names corresponding to rankings, should be exluded in stat gathering
 rank_stats = ['All-Around Ranking', 'FedExCup Season Points', 'Money Leaders']
@@ -121,12 +122,27 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=False):
     # NOW WE HAVE A DICT OF STATS
     # READ IN TOURNAMENT DATA
     tournament_file_dict = tournament_files_for_years(years)
+    leaderboard_dict = {}
 
     for tournament in tournament_file_dict:
+        # Get the course data file
         print('=====================')
         print('Tournament %s' % (tournament))
+        
+        leaderboard_dict[tournament] = {}
+        
         for year in tournament_file_dict[tournament]:
-            print('Got data from %s' % (year))
+            course_file_path = '/'.join(tournament_file_dict[tournament][year][0]['f'].split('/')[:-1]) + '/course.json'
+            course_file = open(course_file_path, 'r')
+            course_data = json.load(course_file)
+            course_file.close()
+            course_name = '>> NO COURSE NAME <<'
+            if len(course_data['courses']):
+                course_name = course_data['courses'][0]['name']
+            print('Got data from %s (%s)' % (course_name, year))
+            
+            leaderboard_dict[tournament][year] = []
+            
             for idx, player in enumerate(tournament_file_dict[tournament][year]):
                 pid = player['id']
                 if pid in data and year in data[pid]:
@@ -164,15 +180,43 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=False):
                     if valid_data == False:
                         continue
 
-                    if total_rounds != 2 and total_rounds != 4:
+                    if total_rounds != 2 and total_rounds != 4 and total_rounds != 3:
                         continue
-
-                    summary['num_rounds'] = str(total_rounds)
-                    summary['total_shots'] = str(sum(hole_scores))
-
+                        
+                    summary['num_rounds'] =     total_rounds
+                    summary['total_shots'] =    sum(hole_scores)
+                    summary['course_name'] =    course_name
+                    
                     this_player_tournament_data['summary'] = summary
 
                     data[pid][year][tournament] = this_player_tournament_data
+                    
+                    leaderboard_dict[tournament][year].append({'id': player, 'score': sum(hole_scores), 'mc': total_rounds != 4})
+
+    for tournament in leaderboard_dict:
+        for year in leaderboard_dict[tournament]:
+            leaderboard = sorted(leaderboard_dict[tournament][year], key=operator.itemgetter('score'))
+            rank = 0
+            best_score = 0
+            leaderboard_start = -1
+            for idx, player in enumerate(leaderboard):
+                if player['mc']:
+                    data[player['id']][year][tournament]['summary']['rank'] = 'mc'
+                else:
+                    if leaderboard_start == -1:
+                        leaderboard_start = idx
+                        
+                    if player['score'] > best_score:
+                        best_score = player['score']
+                        rank = idx + 1 - leaderboard_start
+                    data[player['id']][year][tournament]['summary']['rank'] = rank
+                    player['rank'] = rank
+            
+            leaderboard_dict[tournament][year] = leaderboard
+                    
+
+    # pprint(leaderboard_dict)
+    pprint(data)
 
     return data
 
@@ -380,11 +424,11 @@ def show_stat_over_time(data, stat_name, years):
 
 if __name__ == "__main__":
     # Re-index stats
-    index_stats_in_data(reindex=True)
+    # index_stats_in_data(reindex=True)
 
     # The years we want to look at
-    years = [str(y) for y in range(2013, 2016)]
-
+    years = [str(y) for y in range(2013, 2017)]
+    
     data = player_data_from_years(years, dict_by_id=True)
     # pprint(data)
 
