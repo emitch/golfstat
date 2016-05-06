@@ -44,7 +44,7 @@ def player_data_from_years(years, require_min_rounds=True):
             sys.stdout.write('\r')
             print(f)
             continue
-            
+
         sys.stdout.write('\r%s\t%s' % (player_number, player_year))
         # clean up dictionary
         sanitized = {}
@@ -216,7 +216,7 @@ def gather(years, stat_as_index=None, index_as_stat=None):
     if stat_as_index is None or index_as_stat is None:
         stat_as_index, index_as_stat, _, _ = index_stats_in_data()
     data = player_data_from_years(years)
-    
+
     # convert to matrix and get ranks
     ranks = extract_player_ranks(data)
     # names = extract_player_names(data)
@@ -228,9 +228,9 @@ def show_stat_over_time(data, stat_name, years):
     stat_distributions_by_year = {}
     for year in years:
         stat_distributions_by_year[year] = {}
-    
-    min = 999999
-    max = -9999
+
+    min_val = sys.maxint
+    max_val = -sys.maxint
     for player_data in data:
         stats = player_data['stats']
         for stat in stats:
@@ -242,18 +242,18 @@ def show_stat_over_time(data, stat_name, years):
                 if stat == stat_name:
                     value = stats[stat]['value'].replace('%', '').replace('$', '').replace(',', '')
                     value = float(value)
-                    
-                    if value < min: min = value
-                    if value > max: max = value
-    
+
+                    if value < min_val: min_val = value
+                    if value > max_val: max_val = value
+
     print('\nFound:')
     for stat in stat_distributions_by_year[years[0]]: print(stat)
     print('---------------\nBuilding GIF for', stat_name)
-    
+
     image_files = []
-    
+
     writer = imageio.get_writer(os.getcwd() + '/' + stat_name + '.gif', fps=5)
-    
+
     for idx, year in enumerate(years):
         if stat_name in stat_distributions_by_year[year]:
             dist = [float(s.replace('%', '').replace('$', '').replace(',', '')) for s in stat_distributions_by_year[year][stat_name]]
@@ -264,23 +264,23 @@ def show_stat_over_time(data, stat_name, years):
             plt.savefig(name, bbox_inches='tight')
             writer.append_data(imageio.imread(os.getcwd() + '/' + name))
             os.remove(os.getcwd() + '/' + name)
-    
+
     writer.close()
-    
+
     print('Successfully built GIF for', stat_name)
 
 if __name__ == "__main__":
     # Re-index stats
-    # index_stats_in_data(reindex=True)
-    
+    index_stats_in_data(reindex=True)
+
     # The years we want to look at
     years = [str(y) for y in range(1985, 2016)]
-    
+
     data = player_data_from_years(years)
-    
+
     show_stat_over_time(data, 'Driving Distance', years)
-    
-    
+
+
     # stat_matrix, rank_matrix, index_as_stat, stat_names = gather(years)
 
     # print('Found %i records with %i unique stats' % stat_matrix.shape)

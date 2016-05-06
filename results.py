@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup as Soup
+from scipy.stats import spearmanr
 import requests, json, os
 
 def scrape_scorecards():
@@ -75,11 +76,72 @@ def scrape_courses():
             data = requests.get(baseurl + path).text
             with open('scorecards/' + path, 'w') as file: file.write(data)
 
+def players_in_tourn(tourn_id, year):
+    """ return an iterable of player ids corresponding to tournament
+    participation """
+    # navigate to tournament folder
+    path = 'scorecards/{0}/'.format(tourn_id)
+    # initialize list of players
+    players = []
+    for file in os.listdir(path + year):
+        # add each player id to the list
+        player_id = file.strip('.json')
+        if player_id.isdigit(): players.append(player_id)
 
-def compile_scorecards():
-    # Do some sort of pre-processing to make accessing the scorecards easier
-    return None
+    return players
+
+
+def course_stat_bias(results, tourn_id, stat_as_index, years=None):
+    """ Calculate the spearman correlation of each stat with tournament
+    performance on a given course, indicating how important each stat
+    is for success at a tournament """
+    # get years for tournament
+    if years is None: years = os.listdir('scorecards/' + tourn_id)
+    # get scores for each player
+    scores = []
+    for year in years:
+        players = players_in_tourn(tourn_id, year)
+        for player in players:
+            # compile performance and stuff
+            shots = results[player][year][tourn_id]['summary']['total_shots']
+            rnds = results[player][year][tourn_id]['summary']['num_rounds']
+            scores.append(shots/rnds)
+
+    # initialize vector of spearman correlations
+    corrs = np.empty(len(stat_as_index))
+    for stat in stat_as_index:
+        # vector of stat for each player
+        stats = []
+        for year in years:
+            players = players_in_tourn(tourn_id, year)
+            for player in players:
+                # compile performance and stuff
+                stats.append(results[player][year]['stats'][stat])
+
+        # calculate correlation
+        corrs[stat_as_index[stat]], _ = spearmanr(scores, stats)
+
+    return corrs
+
+# NOT DONE
+def model_tournament(results, stat_as_index):
+    raise
+    """ train a model to predict performance on the level of tournaments
+    using individual player stats and their importance for each course """
+    # First gather all the course biases, final feature vectors are player stats
+    # modulated by the degree to which a given stat predicts success on a course
+    biases = {}
+    for tourn_id in os.listdir('scorecards/'):
+        if not tourn_id.isdigit(): continue
+        biases[tourn_id] = course_stat_bias(results, tourn_id, stat_as_index)
+
+    # now compile feature vectors, iterating through players and looking up
+    # course biases for each tournament, also get tournament results
+    feature_vector_list = []
+    course_scores = []
+
+
+
 
 if __name__ == '__main__':
     #
-
