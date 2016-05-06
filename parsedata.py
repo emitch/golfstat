@@ -123,10 +123,20 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=False):
     tournament_file_dict = tournament_files_for_years(years)
     
     for tournament in tournament_file_dict:
+        # Get the course data file
         print('=====================')
         print('Tournament %s' % (tournament))
+        
         for year in tournament_file_dict[tournament]:
-            print('Got data from %s' % (year))
+            course_file_path = '/'.join(tournament_file_dict[tournament][year][0]['f'].split('/')[:-1]) + '/course.json'
+            course_file = open(course_file_path, 'r')
+            course_data = json.load(course_file)
+            course_file.close()
+            course_name = '>> NO COURSE NAME <<'
+            if len(course_data['courses']):
+                course_name = course_data['courses'][0]['name']
+            print('Got data from %s (%s)' % (course_name, year))
+            
             for idx, player in enumerate(tournament_file_dict[tournament][year]):
                 pid = player['id']
                 if pid in data and year in data[pid]:
@@ -167,8 +177,9 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=False):
                     if total_rounds != 2 and total_rounds != 4:
                         continue
                     
-                    summary['num_rounds'] = str(total_rounds)
-                    summary['total_shots'] = str(sum(hole_scores))
+                    summary['num_rounds'] =     str(total_rounds)
+                    summary['total_shots'] =    str(sum(hole_scores))
+                    summary['course_name'] =    course_name
                     
                     this_player_tournament_data['summary'] = summary
                     
@@ -383,7 +394,7 @@ if __name__ == "__main__":
     # index_stats_in_data(reindex=True)
     
     # The years we want to look at
-    years = [str(y) for y in range(2013, 2016)]
+    years = [str(y) for y in range(2013, 2017)]
     
     data = player_data_from_years(years, dict_by_id=True)
     # pprint(data)
