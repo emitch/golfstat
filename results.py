@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup as Soup
 from scipy.stats import spearmanr
 import requests, json, os
+import numpy as np
 
 def scrape_scorecards():
     """ mine the pgatour data endpoint for individual tournament scorecards
@@ -53,7 +54,7 @@ def scrape_scorecards():
                 # save
                 with open(destination + linked_file, 'w') as file:
                     file.write(data)
-                # output results
+                # output data
                 print('Saved %s\r' % (destination + linked_file), end='')
 
 def scrape_courses():
@@ -91,7 +92,7 @@ def players_in_tourn(tourn_id, year):
     return players
 
 
-def course_stat_bias(results, tourn_id, stat_as_index, years=None):
+def course_stat_bias(data, tourn_id, stat_as_index, years=None):
     """ Calculate the spearman correlation of each stat with tournament
     performance on a given course, indicating how important each stat
     is for success at a tournament """
@@ -102,10 +103,15 @@ def course_stat_bias(results, tourn_id, stat_as_index, years=None):
     for year in years:
         players = players_in_tourn(tourn_id, year)
         for player in players:
+            # skip missing players
+            if player not in data: continue
+            if year not in data[player]: continue
+            if tourn_id not in data[player][year]: continue
+
             # compile performance and stuff
-            shots = results[player][year][tourn_id]['summary']['total_shots']
-            rnds = results[player][year][tourn_id]['summary']['num_rounds']
-            scores.append(shots/rnds)
+            shots = data[player][year][tourn_id]['summary']['total_shots']
+            rnds = data[player][year][tourn_id]['summary']['num_rounds']
+            scores.append(float(shots)/float(rnds))
 
     # initialize vector of spearman correlations
     corrs = np.empty(len(stat_as_index))
@@ -115,17 +121,35 @@ def course_stat_bias(results, tourn_id, stat_as_index, years=None):
         for year in years:
             players = players_in_tourn(tourn_id, year)
             for player in players:
+                # skip missing players
+                if player not in data: continue
+                if year not in data[player]: continue
+                if tourn_id not in data[player][year]: continue
                 # compile performance and stuff
-                stats.append(results[player][year]['stats'][stat])
+                try: val = parse_stat(data[player][year]['stats'][stat]['value'])
+                except KeyError: val = np.nan
+                stats.append(val)
 
         # calculate correlation
         corrs[stat_as_index[stat]], _ = spearmanr(scores, stats)
 
     return corrs
 
+def parse_stat(raw_val):
+    # parse stat to float, taking account of wonky formatting
+    if '%' in raw_val: val = float(raw_val[:-1])/100
+    elif '$' in raw_val: val = float(raw_val[1:])
+    elif "'" in raw_val:
+        # convert distance to inches
+        split = raw_val.split("' ")
+        val = int(split[0]) * 12 + int(split[1][:-1])
+    else:
+        try: val = float(raw_val)
+        except: val = np.nan
+    return val
+
 # NOT DONE
-def model_tournament(results, stat_as_index):
-    raise
+def model_tournament(data, stat_as_index):
     """ train a model to predict performance on the level of tournaments
     using individual player stats and their importance for each course """
     # First gather all the course biases, final feature vectors are player stats
@@ -133,15 +157,14 @@ def model_tournament(results, stat_as_index):
     biases = {}
     for tourn_id in os.listdir('scorecards/'):
         if not tourn_id.isdigit(): continue
-        biases[tourn_id] = course_stat_bias(results, tourn_id, stat_as_index)
+        biases[tourn_id] = course_stat_bias(data, tourn_id, stat_as_index)
 
     # now compile feature vectors, iterating through players and looking up
-    # course biases for each tournament, also get tournament results
+    # course biases for each tournament, also get tournament data
     feature_vector_list = []
     course_scores = []
 
 
-
-
 if __name__ == '__main__':
-    #
+    #POOP
+    print('This does nothing')
