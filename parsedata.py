@@ -101,12 +101,13 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=False):
                         name = stat['name']
                         # Normalize names for stat names that have changed
                         name = name.replace(' - ', ': ')
+                        
                         sanitized[name] = {'rank': stat['rank'], 'value': stat['value']}
 
         if len(sanitized):
             if dict_by_id:
                 if player_number not in data:
-                    data[player_number] = {'name': player_name, 'years': {}}
+                    data[player_number] = {'name': player_name}
 
                 if player_year not in data[player_number]:
                     data[player_number][player_year] = {}
@@ -216,9 +217,44 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=False):
                     
 
     # pprint(leaderboard_dict)
-    pprint(data)
 
     return data
+    
+def stats_from_tournament(data, tournament_to_find, year, stat):
+    stat_values = []
+    for player in data:
+        if year in data[player]:
+            year_dict = data[player][year]
+            if tournament_to_find in year_dict:
+                if stat in year_dict['stats']:
+                    stat_values.append(float(year_dict['stats'][stat]['value']))
+    return stat_values
+
+def summaries_from_tournament(data, tournament_to_find, year):
+    scorecards = []
+    for p in data:
+        player = data[p]
+        if year in player:
+            year_data = player[year]
+            
+            for t in year_data:
+                if t == 'stats': continue
+                if t == tournament_to_find:
+                    tournament = year_data[t]
+                    scorecards.append(tournament['summary'])
+    
+    return scorecards
+    
+def select_from_summaries(summaries, vals):
+    valid = np.array([int(s['num_rounds']) == 4 for s in summaries])
+    np_scores = np.array([-(int(s['total_shots'] - 288)) for s in summaries])[valid]
+    np_vals = np.array(vals)[valid]
+    return (np_vals, np_scores)
+    
+def stats_and_scores(data, t, y, s):
+    stats = stats_from_tournament(data, t, y, s)
+    summaries = summaries_from_tournament(data, t, y)
+    return select_from_summaries(summaries, stats)
 
 def index_stats_in_data(reindex=False, required_fraction=0.5):
     """ create a single mapping from stats to integers that will
@@ -430,6 +466,7 @@ if __name__ == "__main__":
     years = [str(y) for y in range(2013, 2017)]
     
     data = player_data_from_years(years, dict_by_id=True)
+    scorecards_from_tournament(data, '010')
     # pprint(data)
 
     # show_stat_over_time(data, 'Putts Per Round', years)
