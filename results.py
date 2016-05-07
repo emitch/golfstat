@@ -2,6 +2,9 @@ from bs4 import BeautifulSoup as Soup
 from scipy.stats import spearmanr
 import requests, json, os
 import numpy as np
+from sklearn.cross_validation import KFold
+from sklearn.preprocessing import Imputer
+from sklearn.linear_model import LassoCV
 
 def scrape_scorecards():
     """ mine the pgatour data endpoint for individual tournament scorecards
@@ -97,7 +100,8 @@ def course_stat_bias(data, tourn_id, stat_as_index, years=None):
     performance on a given course, indicating how important each stat
     is for success at a tournament """
     # get years for tournament
-    if years is None: years = os.listdir('scorecards/' + tourn_id)
+    if years is None:
+        years = [x for x in os.listdir('scorecards/' + tourn_id) if x.isdigit()]
     # get scores for each player
     scores = []
     for year in years:
@@ -148,10 +152,10 @@ def parse_stat(raw_val):
         except: val = np.nan
     return val
 
-# NOT DONE
-def model_tournament(data, stat_as_index):
+def compile_unbiased_stats_and_results(data, stat_as_index):
     """ train a model to predict performance on the level of tournaments
     using individual player stats and their importance for each course """
+    n_stats = len(stat_as_index)
     # First gather all the course biases, final feature vectors are player stats
     # modulated by the degree to which a given stat predicts success on a course
     biases = {}
@@ -162,9 +166,59 @@ def model_tournament(data, stat_as_index):
     # now compile feature vectors, iterating through players and looking up
     # course biases for each tournament, also get tournament data
     feature_vector_list = []
-    course_scores = []
+    scores = []
+    for player in data:
+        for year in data[player]:
+            for tourn in data[player][year]:
+                if not tourn.isdigit(): continue
+                # make feature vectors
+                fv = np.empty(n_stats)
+                for stat in stat_as_index:
+                    try: val = parse_stat(data[player][year]['stats'][stat]['value'])
+                    except KeyError: val = np.nan
+                    fv[stat_as_index[stat]] = biases[tourn][stat_as_index[stat]] * val
+                # add to running list
+                feature_vector_list.append(fv)
+                # get results
+                shots = data[player][year][tourn]['summary']['total_shots']
+                rnds = data[player][year][tourn]['summary']['num_rounds']
+                scores.append(float(shots)/float(rnds))
 
+    # concatenate list into single np matrix
+    biased_stats = np.vstack(feature_vector_list)
+    scores = np.array(scores)
+
+    return biased_stats, scores
 
 if __name__ == '__main__':
-    #POOP
-    print('This does nothing')
+    # load data
+    import parsedata
+    data = parsedata.player_data_from_years(
+        ['2014', '2015', '2016'], dict_by_id=True)
+    with open('stat_as_index.json', 'r') as f:
+        stat_as_index = json.load(f)
+    # compile and shit
+    print('Compiling stats...')
+    bs, sc = compile_unbiased_stats_and_results(data, stat_as_index)
+    # impute NaNs
+    print('Imputing...')
+    imp = Imputer()
+    bs = imp.fit_transform(bs)
+
+    # train model and evaluate
+    print('Training model...')
+    n_obs = len(sc)
+    pred = np.empty(n_obs)
+    for train, test in KFold(n_obs, 100):
+        # fit
+        las = LassoCV()
+        las.fit(bs[train,:], sc[train])
+        # predict
+        pred[test] = las.predict(bs[test,:])
+
+    # average errors
+    print('Calculating errors...')
+    err = pred - sc
+    rmse = np.nanmean(err ** 2) ** .5
+    print('Root-mean-square-error: %.4d' % rmse)
+
