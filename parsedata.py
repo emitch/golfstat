@@ -129,9 +129,9 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=False):
         # Get the course data file
         print('=====================')
         print('Tournament %s' % (tournament))
-        
+
         leaderboard_dict[tournament] = {}
-        
+
         for year in tournament_file_dict[tournament]:
             course_file_path = '/'.join(tournament_file_dict[tournament][year][0]['f'].split('/')[:-1]) + '/course.json'
             course_file = open(course_file_path, 'r')
@@ -141,9 +141,9 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=False):
             if len(course_data['courses']):
                 course_name = course_data['courses'][0]['name']
             print('Got data from %s (%s)' % (course_name, year))
-            
+
             leaderboard_dict[tournament][year] = []
-            
+
             for idx, player in enumerate(tournament_file_dict[tournament][year]):
                 pid = player['id']
                 if pid in data and year in data[pid]:
@@ -181,17 +181,17 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=False):
                     if valid_data == False:
                         continue
 
-                    if total_rounds != 2 and total_rounds != 4 and total_rounds != 3:
+                    if total_rounds not in [2,3,4]:
                         continue
-                        
+
                     summary['num_rounds'] =     total_rounds
                     summary['total_shots'] =    sum(hole_scores)
                     summary['course_name'] =    course_name
-                    
+
                     this_player_tournament_data['summary'] = summary
 
                     data[pid][year][tournament] = this_player_tournament_data
-                    
+
                     leaderboard_dict[tournament][year].append({'id': player, 'score': sum(hole_scores), 'mc': total_rounds != 4})
 
     for tournament in leaderboard_dict:
@@ -206,17 +206,14 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=False):
                 else:
                     if leaderboard_start == -1:
                         leaderboard_start = idx
-                        
+
                     if player['score'] > best_score:
                         best_score = player['score']
                         rank = idx + 1 - leaderboard_start
                     data[player['id']][year][tournament]['summary']['rank'] = rank
                     player['rank'] = rank
-            
-            leaderboard_dict[tournament][year] = leaderboard
-                    
 
-    # pprint(leaderboard_dict)
+            leaderboard_dict[tournament][year] = leaderboard
 
     return data
     
@@ -464,7 +461,7 @@ if __name__ == "__main__":
 
     # The years we want to look at
     years = [str(y) for y in range(2013, 2017)]
-    
+
     data = player_data_from_years(years, dict_by_id=True)
     scorecards_from_tournament(data, '010')
     # pprint(data)
