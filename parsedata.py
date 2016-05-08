@@ -229,7 +229,7 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=True):
                         for round_num in range(total_rounds):
                             if 'score' not in round_stats[round_num]:
                                 round_stats[round_num]['score'] = "0"
-                                
+
                             round_stats[round_num]['score'] = str(int(round_stats[round_num]['score']) + int(rounds[round_num]['holes'][idx]['sc']))
 
                             if 'drives' not in round_stats[round_num]:
@@ -255,7 +255,7 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=True):
                                 if len(shot['putt']):
                                     putts += 1
                             round_stats[round_num]['putts_per_hole'].append(str(putts))
-                    
+
                     for stats in round_stats:
                         if 'drives' in stats:
                             tot_drives = 0
@@ -275,7 +275,7 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=True):
                             tot_putts = 0
                             for putt in stats['putts_per_hole']:
                                 tot_putts += int(putt)
-                            
+
                             if tot_putts > 0:
                                 stats['total_putts'] = str(tot_putts)
                                 putts_list.append(tot_putts)
@@ -314,11 +314,11 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=True):
 
             leaderboard_dict[tournament][year] = leaderboard
 
-    plt.figure()
-    plt.hist(drives, bins=2000)
-    plt.figure()
-    plt.hist(putts_list, bins=20)
-    plt.show()
+    # plt.figure()
+    # plt.hist(drives, bins=2000)
+    # plt.figure()
+    # plt.hist(putts_list, bins=20)
+    # plt.show()
 
     return data
 
@@ -369,9 +369,13 @@ def course_info_for_tournament(t, y):
 
     course_file_path = os.getcwd() + '/scorecards/' + t + '/' + y + '/course.json'
 
-    course_file = open(course_file_path, 'r')
-    course_data = json.load(course_file)['courses'][0]
-    course_file.close()
+    try:
+        course_file = open(course_file_path, 'r')
+        course_data = json.load(course_file)['courses'][0]
+        course_file.close()
+    except FileNotFoundError:
+        course_info_for_tournament.cache[t + y] = None
+        return None
 
     summary = {}
 
@@ -382,11 +386,11 @@ def course_info_for_tournament(t, y):
     if 'holes' in course_data:
         for hole in course_data['holes']:
             pars.append(float(hole['parValue']))
-            yardages.append(hole['yards'])
+            yardages.append(float(hole['yards']))
 
-            if pars[-1] == '3':
+            if pars[-1] == 3:
                 threes.append(float(yardages[-1]))
-            elif pars[-1] == '4':
+            elif pars[-1] == 4:
                 fours.append(float(yardages[-1]))
             else:
                 fives.append(float(yardages[-1]))
@@ -394,27 +398,27 @@ def course_info_for_tournament(t, y):
 
     summary['course_name'] =    course_data['name']
     if 'yards' in course_data and len(course_data['yards']) > 1:
-        summary['course_yardage'] = course_data['yards']
+        summary['course_yardage'] = float(course_data['yards'].replace(',',''))
     else:
         summary['course_yardage'] = np.nan
 
     if 'parValue' in course_data and len(course_data['parValue']) > 1:
-        summary['course_par'] =     course_data['parValue']
+        summary['course_par'] =     float(course_data['parValue'])
     else:
         summary['course_par'] = np.nan
 
-    summary['hole_pars'] =      pars
-    summary['hole_yardages'] =  yardages
+    summary['hole_pars'] = pars
+    summary['hole_yardages'] = yardages
     if len(threes) > 0:
-        summary['three_yardage'] = sum(threes) / len(threes)
+        summary['three_yardage'] = float(sum(threes) / len(threes))
     else:
         summary['three_yardage'] = np.nan
     if len(fours) > 0:
-        summary['four_yardage'] = sum(fours) / len(fours)
+        summary['four_yardage'] = float(sum(fours) / len(fours))
     else:
         summary['four_yardage'] = np.nan
     if len(fives) > 0:
-        summary['five_yardage'] = sum(fives) / len(fives)
+        summary['five_yardage'] = float(sum(fives) / len(fives))
     else:
         summary['five_yardage'] = np.nan
 

@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup as Soup
 from scipy.stats import spearmanr
-import requests, json, os
+import requests, json, os, parsedata
 import numpy as np
 from sklearn.cross_validation import KFold
 from sklearn.preprocessing import Imputer
@@ -105,6 +105,8 @@ def course_stat_bias(data, tourn_id, stat_as_index, years=None):
     # get scores for each player
     scores = []
     for year in years:
+        # CHECK IF IT EXISTS THO
+        if parsedata.course_info_for_tournament(tourn_id, year) is None: continue
         players = players_in_tourn(tourn_id, year)
         for player in players:
             # skip missing players
@@ -115,6 +117,7 @@ def course_stat_bias(data, tourn_id, stat_as_index, years=None):
             # compile performance and stuff
             shots = data[player][year][tourn_id]['summary']['total_shots']
             rnds = data[player][year][tourn_id]['summary']['num_rounds']
+
             scores.append(float(shots)/float(rnds))
 
     # initialize vector of spearman correlations
@@ -123,6 +126,7 @@ def course_stat_bias(data, tourn_id, stat_as_index, years=None):
         # vector of stat for each player
         stats = []
         for year in years:
+            if parsedata.course_info_for_tournament(tourn_id, year) is None: continue
             players = players_in_tourn(tourn_id, year)
             for player in players:
                 # skip missing players
@@ -164,20 +168,20 @@ def basic_fv(player, course, biases, stat_as_index):
     for stat in stat_as_index:
         try: val = parse_stat(player['stats'][stat]['value'])
         except KeyError: val = np.nan
-        fv[stat_as_index[stat]] = biases[tourn][stat_as_index[stat]] * val
+        fv[stat_as_index[stat]] = biases[stat_as_index[stat]] * val
 
     return fv
 
 def include_distance(player, course, biases, stat_as_index):
     # basic_fv but also append driving ratio and stuff
-    basic = basic_fv(data, course_info, biases, stat_as_index)
+    basic = basic_fv(player, course, biases, stat_as_index)
     n_stats = len(basic)
     fv = np.empty(n_stats + 3)
     # get each other stat
-    dist = player['stats']['Driving Distance']
-    fv[-3] = float(course_info['three_yardage']) / dist
-    fv[-2] = float(course_info['four_yardage']) / dist
-    fv[-1] = float(course_info['five_yardage']) / dist
+    dist = float(player['stats']['Driving Distance']['value'])
+    fv[-3] = float(course['three_yardage']) / dist
+    fv[-2] = float(course['four_yardage']) / dist
+    fv[-1] = float(course['five_yardage']) / dist
 
     return fv
 
@@ -185,37 +189,39 @@ def include_distance(player, course, biases, stat_as_index):
 # END OF FEATURE VECTOR BUILDING
 ###############################################################################
 
-def build_fvs(data, stat_as_index, compute_vector=basic_fv):
+def build_fvs(data, year, stat_as_index, make_vector=basic_fv):
     """ train a model to predict performance on the level of tournaments
     using individual player stats and their importance for each course.
-    The function compute_vector is the one that builds a feature vector from
+    The function make_vector is the one that builds a feature vector from
     the input data: data, biases, and stat_as_index """
     # First gather all the course biases, final feature vectors are player stats
     # modulated by the degree to which a given stat predicts success on a course
     biases = {}
     for tourn_id in os.listdir('scorecards/'):
         if not tourn_id.isdigit(): continue
-        biases[tourn_id] = course_stat_bias(data, tourn_id, stat_as_index)
+        biases[tourn_id] = course_stat_bias(data, tourn_id, stat_as_index, [year])
 
     # now compile feature vectors, iterating through players and looking up
     # course biases for each tournament, also get tournament data
     feature_vector_list = []
     scores = []
     for player in data:
-        for year in data[player]:
-            for tourn in data[player][year]:
-                if not tourn.isdigit(): continue
-                # get any additional course data
-                course_info = course_info_for_tournament(tourn, year)
-                # make feature vectors
-                fv = compute_vector(data[player][year], course_info, biases, stat_as_index)
-                # add to running list
-                feature_vector_list.append(fv)
-                # get results
-                shots = data[player][year][tourn]['summary']['total_shots']
-                rnds = data[player][year][tourn]['summary']['num_rounds']
+        if year not in data[player]: continue
+        for tourn in data[player][year]:
+            if not tourn.isdigit(): continue
+            # get any additional course data
+            course_info = parsedata.course_info_for_tournament(tourn, year)
+            # make feature vectors
+            fv = make_vector(
+                data[player][year], course_info, biases[tourn], stat_as_index)
+            # add to running list
+            feature_vector_list.append(fv)
+            # get results
+            shots = data[player][year][tourn]['summary']['total_shots']
+            rnds = data[player][year][tourn]['summary']['num_rounds']
 
-                scores.append(float(shots)/float(rnds))
+            par = float(course_info['course_par'])
+            scores.append(par - (float(shots)/float(rnds)))
 
     # concatenate list into single np matrix
     biased_stats = np.vstack(feature_vector_list)
@@ -223,83 +229,98 @@ def build_fvs(data, stat_as_index, compute_vector=basic_fv):
 
     return biased_stats, scores
 
-def hole_stat_bias(data, tourn_id, years, h):
-    raise
-    """ Calculate the spearman correlation of each stat with tournament
-    performance on a given hole, indicating how important each stat
-    is for success on a hole """
-    # get years for tournament
-    if years is None:
-        years = [x for x in os.listdir('scorecards/' + tourn_id) if x.isdigit()]
-    # get scores for each player
-    scores = []
-    for year in years:
-        players = players_in_tourn(tourn_id, year)
-        for player in players:
-            # skip missing players
-            if player not in data: continue
-            if year not in data[player]: continue
-            if tourn_id not in data[player][year]: continue
+# def hole_stat_bias(data, tourn_id, years, h):
+#     raise
+#     """ Calculate the spearman correlation of each stat with tournament
+#     performance on a given hole, indicating how important each stat
+#     is for success on a hole """
+#     # get years for tournament
+#     if years is None:
+#         years = [x for x in os.listdir('scorecards/' + tourn_id) if x.isdigit()]
+#     # get scores for each player
+#     scores = []
+#     for year in years:
+#         players = players_in_tourn(tourn_id, year)
+#         for player in players:
+#             # skip missing players
+#             if player not in data: continue
+#             if year not in data[player]: continue
+#             if tourn_id not in data[player][year]: continue
 
-            # compile performance and stuff
-            score = data[player][year][tourn_id]['scorecard']['h'][h-1]['sc']
+#             # compile performance and stuff
+#             score = data[player][year][tourn_id]['scorecard']['h'][h-1]['sc']
 
-            scores.append()
+#             scores.append()
 
-    # initialize vector of spearman correlations
-    corrs = np.empty(len(stat_as_index))
-    for stat in stat_as_index:
-        # vector of stat for each player
-        stats = []
-        for year in years:
-            players = players_in_tourn(tourn_id, year)
-            for player in players:
-                # skip missing players
-                if player not in data: continue
-                if year not in data[player]: continue
-                if tourn_id not in data[player][year]: continue
-                # compile performance and stuff
-                try: val = parse_stat(data[player][year]['stats'][stat]['value'])
-                except KeyError: val = np.nan
-                stats.append(val)
+#     # initialize vector of spearman correlations
+#     corrs = np.empty(len(stat_as_index))
+#     for stat in stat_as_index:
+#         # vector of stat for each player
+#         stats = []
+#         for year in years:
+#             players = players_in_tourn(tourn_id, year)
+#             for player in players:
+#                 # skip missing players
+#                 if player not in data: continue
+#                 if year not in data[player]: continue
+#                 if tourn_id not in data[player][year]: continue
+#                 # compile performance and stuff
+#                 try: val = parse_stat(data[player][year]['stats'][stat]['value'])
+#                 except KeyError: val = np.nan
+#                 stats.append(val)
 
-        # calculate correlation
-        corrs[stat_as_index[stat]], _ = spearmanr(scores, stats)
+#         # calculate correlation
+#         corrs[stat_as_index[stat]], _ = spearmanr(scores, stats)
 
-    return corrs, info
+#     return corrs, info
 
-if __name__ == '__main__':
-    # load data
-    import parsedata
-    data = parsedata.player_data_from_years(
-        ['2014', '2015', '2016'], dict_by_id=True)
-    with open('stat_as_index.json', 'r') as f:
-        stat_as_index = json.load(f)
+def test_model(data, stat_as_index, make_vector, regressor):
     # compile and shit
     print('Compiling stats...')
-    bs, sc = build_fvs(
-        data, stat_as_index, compute_vector=include_distance)
+    fv, sc = [], []
+    for year in ['2014', '2015', '2016']:
+        f,s = build_fvs(
+            data, year, stat_as_index, make_vector=include_distance)
+        fv.append(f)
+        sc.append(s)
+
     # impute NaNs
     print('Imputing...')
     imp = Imputer()
     bs = imp.fit_transform(bs)
 
-    # train model and evaluate
-    print('Training model...')
-    n_obs = len(sc)
-    pred = np.empty(n_obs)
-    for train, test in KFold(n_obs, 100):
-        # fit
-        las = LassoCV()
-        las.fit(bs[train,:], sc[train])
-        # predict
-        pred[test] = las.predict(bs[test,:])
+    # # train model and evaluate using kfold cross validation
+    # print('Training model...')
+    # n_obs = len(sc)
+    # pred = np.empty(n_obs)
+    # for train, test in KFold(n_obs, 100):
+    #     # fit
+    #     mod = regressor
+    #     mod.fit(bs[train,:], sc[train])
+    #     # predict
+    #     pred[test] = mod.predict(bs[test,:])
+
+    # Predict 2016 from 2014 and 2015
+    fv_train, fv_test = np.vstack(fv[0:2]), fv[2]
+    sc_train, sc_test = np.vstack(sc[0:2]), sc[2]
+    mod = regressor
+    mod.fit(fv_train, sc_train)
+    pred = mod.predict(fv_test)
 
     # average errors
     print('Calculating errors...')
-    err = pred - sc
+    err = pred - sc_test
     rmse = np.nanmean(err ** 2) ** .5
-    print('Root-mean-square-error: %.4d' % rmse)
+    print('Root-mean-square-error: %.4f' % rmse)
 
-    # look at correlations with stats
+    return rmse, mod
 
+if __name__ == '__main__':
+    # load data
+    data = parsedata.player_data_from_years(
+        ['2014', '2015', '2016'], dict_by_id=True)
+    with open('stat_as_index.json', 'r') as f:
+        stat_as_index = json.load(f)
+
+    # compile and shit
+    test_model(data, stat_as_index, include_distance, LassoCV())
