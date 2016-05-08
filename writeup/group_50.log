@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  7 MAY 2016 20:22
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  7 MAY 2016 23:26
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -324,22 +324,15 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 72.
  (./group_50.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 72.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 72.
-
-
-Package rerunfilecheck Warning: File `group_50.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `group_50.out':
-(rerunfilecheck)             Before: 35C12AEA0796FC6062638F152C59D780;483
-(rerunfilecheck)             After:  9A4616D23633BEC1F89F2FBFDFF0396A;545.
+Package rerunfilecheck Info: File `group_50.out' has not changed.
+(rerunfilecheck)             Checksum: 9A4616D23633BEC1F89F2FBFDFF0396A;545.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 72.
  ) 
 Here is how much of TeX's memory you used:
- 5577 strings out of 493633
- 81723 string characters out of 3143378
- 168011 words of memory out of 3000000
- 8824 multiletter control sequences out of 15000+200000
+ 5578 strings out of 493633
+ 81739 string characters out of 3143378
+ 168020 words of memory out of 3000000
+ 8825 multiletter control sequences out of 15000+200000
  13280 words of font info for 28 fonts, out of 3000000 for 9000
  831 hyphenation exceptions out of 8191
  37i,12n,39p,604b,308s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -348,10 +341,10 @@ exlive/2011/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2
 011/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2011/tex
 mf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2011/texmf-dist/fo
 nts/type1/urw/times/utmr8a.pfb>
-Output written on group_50.pdf (3 pages, 50979 bytes).
+Output written on group_50.pdf (3 pages, 50827 bytes).
 PDF statistics:
- 80 PDF objects out of 1000 (max. 8388607)
- 70 compressed objects within 1 object stream
+ 83 PDF objects out of 1000 (max. 8388607)
+ 73 compressed objects within 1 object stream
  15 named destinations out of 1000 (max. 500000)
- 73 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 81 words of extra memory for PDF output out of 10000 (max. 10000000)
 
