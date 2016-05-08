@@ -4,7 +4,7 @@ import requests, json, os, parsedata
 import numpy as np
 from sklearn.cross_validation import KFold
 from sklearn.preprocessing import Imputer
-from sklearn.linear_model import LassoCV
+from sklearn.linear_model import LassoCV, RidgeCV, ElasticNetCV
 
 def scrape_scorecards():
     """ mine the pgatour data endpoint for individual tournament scorecards
@@ -169,6 +169,7 @@ def basic_fv(player, course, biases, stat_as_index):
         try: val = parse_stat(player['stats'][stat]['value'])
         except KeyError: val = np.nan
         fv[stat_as_index[stat]] = biases[stat_as_index[stat]] * val
+        #print('Bias: % 5f \t Value: % .3f \t(%s)' % (biases[stat_as_index[stat]], val, stat))
 
     return fv
 
@@ -178,7 +179,10 @@ def include_distance(player, course, biases, stat_as_index):
     n_stats = len(basic)
     fv = np.empty(n_stats + 3)
     # get each other stat
-    dist = float(player['stats']['Driving Distance']['value'])
+    try: dist = float(player['stats']['Driving Distance']['value'])
+    except KeyError: dist = np.nan
+
+    fv[:-3] = basic
     fv[-3] = float(course['three_yardage']) / dist
     fv[-2] = float(course['four_yardage']) / dist
     fv[-1] = float(course['five_yardage']) / dist
@@ -221,13 +225,13 @@ def build_fvs(data, year, stat_as_index, make_vector=basic_fv):
             rnds = data[player][year][tourn]['summary']['num_rounds']
 
             par = float(course_info['course_par'])
-            scores.append(par - (float(shots)/float(rnds)))
+            scores.append((float(shots)/float(rnds))-par)
 
     # concatenate list into single np matrix
-    biased_stats = np.vstack(feature_vector_list)
+    unbiased_stats = np.vstack(feature_vector_list)
     scores = np.array(scores)
 
-    return biased_stats, scores
+    return unbiased_stats, scores
 
 # def hole_stat_bias(data, tourn_id, years, h):
 #     raise
@@ -280,14 +284,9 @@ def test_model(data, stat_as_index, make_vector, regressor):
     fv, sc = [], []
     for year in ['2014', '2015', '2016']:
         f,s = build_fvs(
-            data, year, stat_as_index, make_vector=include_distance)
+            data, year, stat_as_index, make_vector=make_vector)
         fv.append(f)
         sc.append(s)
-
-    # impute NaNs
-    print('Imputing...')
-    imp = Imputer()
-    bs = imp.fit_transform(bs)
 
     # # train model and evaluate using kfold cross validation
     # print('Training model...')
@@ -300,9 +299,27 @@ def test_model(data, stat_as_index, make_vector, regressor):
     #     # predict
     #     pred[test] = mod.predict(bs[test,:])
 
-    # Predict 2016 from 2014 and 2015
+    # Compile into single vectors: Predict 2016 from 2014 and 2015
     fv_train, fv_test = np.vstack(fv[0:2]), fv[2]
-    sc_train, sc_test = np.vstack(sc[0:2]), sc[2]
+    sc_train, sc_test = np.concatenate(sc[0:2]), sc[2]
+
+    train_nan = np.isnan(fv_train)
+    test_nan = np.isnan(fv_test)
+
+    # Impute NaNs
+    if train_nan.any():
+        i1 = Imputer()
+        fv_train = i1.fit_transform(fv_train)
+    if test_nan.any():
+        i2 = Imputer()
+        fv_test = i2.fit_transform(fv_test)
+
+    # Exclude players with missing scores
+    train_nan, test_nan = np.isnan(sc_train), np.isnan(sc_test)
+    fv_train, sc_train = fv_train[~train_nan], sc_train[~train_nan]
+    fv_test, sc_test = fv_test[~test_nan], sc_test[~test_nan]
+
+    # Build model
     mod = regressor
     mod.fit(fv_train, sc_train)
     pred = mod.predict(fv_test)
@@ -323,4 +340,5 @@ if __name__ == '__main__':
         stat_as_index = json.load(f)
 
     # compile and shit
-    test_model(data, stat_as_index, include_distance, LassoCV())
+    print('Basic FV, Lasso')
+    test_model(data, stat_as_index, basic_fv, LassoCV())

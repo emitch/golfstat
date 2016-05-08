@@ -1,4 +1,4 @@
-import sys, os, json
+import sys, os, json, re
 from pprint import pprint
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,7 +8,7 @@ import imageio
 import operator
 
 # stat names corresponding to rankings, should be exluded in stat gathering
-rank_stats = ['All-Around Ranking', 'FedExCup Season Points', 'Money Leaders']
+rank_stats = ['All-Around Ranking', 'FedExCup Season Points', 'Money Leaders', 'Par 3 Birdie or Better Leaders']
 
 def stat_files_for_years(years):
     selected_files = []
@@ -385,8 +385,8 @@ def course_info_for_tournament(t, y):
     threes, fours, fives = [], [], []
     if 'holes' in course_data:
         for hole in course_data['holes']:
-            pars.append(float(hole['parValue']))
-            yardages.append(float(hole['yards']))
+            pars.append(float(hole['parValue'].split(' / ')[0]))
+            yardages.append(float(hole['yards'].split(' / ')[0]))
 
             if pars[-1] == 3:
                 threes.append(float(yardages[-1]))
@@ -396,14 +396,14 @@ def course_info_for_tournament(t, y):
                 fives.append(float(yardages[-1]))
 
 
-    summary['course_name'] =    course_data['name']
+    summary['course_name'] = course_data['name']
     if 'yards' in course_data and len(course_data['yards']) > 1:
-        summary['course_yardage'] = float(course_data['yards'].replace(',',''))
+        summary['course_yardage'] = float(re.sub('\D','',course_data['yards']))
     else:
         summary['course_yardage'] = np.nan
 
     if 'parValue' in course_data and len(course_data['parValue']) > 1:
-        summary['course_par'] =     float(course_data['parValue'])
+        summary['course_par'] = float(course_data['parValue'])
     else:
         summary['course_par'] = np.nan
 
@@ -444,10 +444,10 @@ def index_stats_in_data(reindex=False, required_fraction=0.5):
     else:
         print('Indexing stats...')
         # load data from all years
-        start_year = 1980
-        end_year = 2015
+        start_year = 2014
+        end_year = 2016
         data = player_data_from_years(
-            [str(x) for x in range(start_year, end_year+1)])
+            [str(x) for x in range(start_year, end_year+1)], dict_by_id=False)
 
         # initialize empty data structures
         appearances = {}
@@ -589,8 +589,8 @@ def show_stat_over_time(data, stat_name, years):
     for year in years:
         stat_distributions_by_year[year] = {}
 
-    min_val = sys.maxint
-    max_val = -sys.maxint
+    min_val = sys.maxsize
+    max_val = -sys.maxsize
     for player_data in data:
         stats = player_data['stats']
         for stat in stats:
@@ -631,13 +631,13 @@ def show_stat_over_time(data, stat_name, years):
 
 if __name__ == "__main__":
     # Re-index stats
-    # index_stats_in_data(reindex=True)
+    index_stats_in_data(reindex=True)
 
     # The years we want to look at
-    years = [str(y) for y in range(2013, 2017)]
+    #years = [str(y) for y in range(2013, 2017)]
 
-    data = player_data_from_years(years, dict_by_id=True)
-    scorecards_from_tournament(data, '010')
+    #data = player_data_from_years(years, dict_by_id=True)
+    #scorecards_from_tournament(data, '010')
     # pprint(data)
 
     # show_stat_over_time(data, 'Putts Per Round', years)
