@@ -189,6 +189,14 @@ def include_distance(player, course, biases, stat_as_index):
 
     return fv
 
+def include_last_tourn(player, course, biases, stat_as_index):
+     # basic_fv but also append driving ratio and stuff
+    basic = basic_fv(player, course, biases, stat_as_index)
+    n_stats = len(basic)
+    fv = np.empty(n_stats + 1)
+    fv[:-1] = basic
+    fv[-1] =
+
 ###############################################################################
 # END OF FEATURE VECTOR BUILDING
 ###############################################################################
@@ -307,12 +315,15 @@ def test_model(data, stat_as_index, make_vector, regressor):
     test_nan = np.isnan(fv_test)
 
     # Impute NaNs
+    print('Imputing')
     if train_nan.any():
         i1 = Imputer()
         fv_train = i1.fit_transform(fv_train)
+        print(i1.statistics_)
     if test_nan.any():
         i2 = Imputer()
         fv_test = i2.fit_transform(fv_test)
+        print(i2.statistics_)
 
     # Exclude players with missing scores
     train_nan, test_nan = np.isnan(sc_train), np.isnan(sc_test)
@@ -351,3 +362,7 @@ if __name__ == '__main__':
     for i, stat in enumerate(whitelist): wl[stat] = i
     print('Whitelisted stats')
     test_model(data, wl, basic_fv, LinearRegression())
+
+    print('POOP')
+    test_model(data, wl, include_distance, LinearRegression())
+
