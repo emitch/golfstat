@@ -102,7 +102,6 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=True):
                         name = stat['name']
                         # Normalize names for stat names that have changed
                         name = name.replace(' - ', ': ')
-
                         sanitized[name] = {'rank': stat['rank'], 'value': stat['value']}
 
         if len(sanitized):
@@ -283,9 +282,7 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=True):
                             else:
                                 stats['total_putts'] = 'nan'
                                 stats['putts_per_hole'] = ['nan' for p in stats['putts_per_hole']]
-
-                    # pprint(round_stats)
-
+                    
                     summary['round_stats'] = round_stats
 
                     this_player_tournament_data['summary'] = summary
@@ -362,71 +359,108 @@ def stats_and_scores(data, t, y, s):
 
 # extract info about the course for a particular tournament
 def course_info_for_tournament(t, y):
+    # build the cache if this is the first call (static function variable)
     if not hasattr(course_info_for_tournament, 'cache'):
         course_info_for_tournament.cache = {}
+        years = ['2014', '2015', '2016']
+        tournament_file_dict = tournament_files_for_years(years)
+            
+        # FOR EACH TOURNAMENT
+        for tournament in tournament_file_dict:
+            # FOR EACH YEAR
+            for year in tournament_file_dict[tournament]:
+                if year not in course_info_for_tournament.cache:
+                    course_info_for_tournament.cache[year] = {}
+                    
+                course_file_path = os.getcwd() + '/scorecards/' + tournament + '/' + year + '/course.json'
 
-    if t + y in course_info_for_tournament.cache:
-        return course_info_for_tournament.cache[t + y]
+                try:
+                    course_file = open(course_file_path, 'r')
+                    course_data = json.load(course_file)['courses'][0]
+                    course_file.close()
+                except FileNotFoundError:
+                    course_info_for_tournament.cache[year][tournament] = None
+                    return None
 
-    course_file_path = os.getcwd() + '/scorecards/' + t + '/' + y + '/course.json'
+                summary = {}
 
-    try:
-        course_file = open(course_file_path, 'r')
-        course_data = json.load(course_file)['courses'][0]
-        course_file.close()
-    except FileNotFoundError:
-        course_info_for_tournament.cache[t + y] = None
-        return None
+                pars = []
+                yardages = []
 
-    summary = {}
-
-    pars = []
-    yardages = []
-
-    threes, fours, fives = [], [], []
-    if 'holes' in course_data:
-        for hole in course_data['holes']:
-            pars.append(float(hole['parValue'].split(' / ')[0]))
-            yardages.append(float(hole['yards'].split(' / ')[0]))
-
-            if pars[-1] == 3:
-                threes.append(float(yardages[-1]))
-            elif pars[-1] == 4:
-                fours.append(float(yardages[-1]))
-            else:
-                fives.append(float(yardages[-1]))
+                threes, fours, fives = [], [], []
+                if 'holes' in course_data:
+                    for hole in course_data['holes']:
+                        pars.append(float(hole['parValue'].split(' / ')[0]))
+                        yardages.append(hole['yards'].split(' / ')[0])
+                        
+                        if int(pars[-1]) == 3:
+                            threes.append(float(yardages[-1]))
+                        elif int(pars[-1]) == 4:
+                            fours.append(float(yardages[-1]))
+                        else:
+                            fives.append(float(yardages[-1]))
 
 
-    summary['course_name'] = course_data['name']
-    if 'yards' in course_data and len(course_data['yards']) > 1:
-        summary['course_yardage'] = float(re.sub('\D','',course_data['yards']))
-    else:
-        summary['course_yardage'] = np.nan
+                # set the week in the schedule/name for this tournament
+                summary['week'] =           course_data['week']
+                summary['course_name'] = course_data['name']
+                if 'yards' in course_data and len(course_data['yards']) > 1:
+                    summary['course_yardage'] = float(re.sub('\D','',course_data['yards']))
+                else:
+                    summary['course_yardage'] = np.nan
 
-    if 'parValue' in course_data and len(course_data['parValue']) > 1:
-        summary['course_par'] = float(course_data['parValue'])
-    else:
-        summary['course_par'] = np.nan
+                if 'parValue' in course_data and len(course_data['parValue']) > 1:
+                    summary['course_par'] = float(course_data['parValue'])
+                else:
+                    summary['course_par'] = np.nan
 
-    summary['hole_pars'] = pars
-    summary['hole_yardages'] = yardages
-    if len(threes) > 0:
-        summary['three_yardage'] = float(sum(threes) / len(threes))
-    else:
-        summary['three_yardage'] = np.nan
-    if len(fours) > 0:
-        summary['four_yardage'] = float(sum(fours) / len(fours))
-    else:
-        summary['four_yardage'] = np.nan
-    if len(fives) > 0:
-        summary['five_yardage'] = float(sum(fives) / len(fives))
-    else:
-        summary['five_yardage'] = np.nan
+                summary['hole_pars'] = pars
+                summary['hole_yardages'] = yardages
+                if len(threes) > 0:
+                    summary['three_yardage'] = float(sum(threes) / len(threes))
+                else:
+                    summary['three_yardage'] = np.nan
+                if len(fours) > 0:
+                    summary['four_yardage'] = float(sum(fours) / len(fours))
+                else:
+                    summary['four_yardage'] = np.nan
+                if len(fives) > 0:
+                    summary['five_yardage'] = float(sum(fives) / len(fives))
+                else:
+                    summary['five_yardage'] = np.nan
+                
+                # put our result in the cache
+                course_info_for_tournament.cache[year][tournament] = summary
+                    
+        for year in years:
+            for tournament in course_info_for_tournament.cache[year]:
+                # use this tournament's week as the default
+                prev_week = -sys.maxsize
+                
+                this_week = int(course_info_for_tournament.cache[year][tournament]['week'])
+                prev_ids = []
+                
+                for other_tournament in course_info_for_tournament.cache[year]:
+                    other_week = int(course_info_for_tournament.cache[year][other_tournament]['week'])
+                    # print('', other_week)
+                    if other_week >= prev_week and other_week < this_week:
+                        if other_week == prev_week:
+                            prev_ids.append(other_tournament)
+                        else:
+                            prev_week = other_week
+                            prev_ids = [other_tournament]
+                            
+                if this_week - prev_week > 2: prev_ids = [np.nan]
+                course_info_for_tournament.cache[year][tournament]['prev_ids'] = prev_ids
+                
+                print(year, this_week, prev_week, tournament, prev_ids)
 
-    course_info_for_tournament.cache[t + y] = summary
+    return course_info_for_tournament.cache[y][t]
 
-    return summary
-
+# get the finish of a player the previous weekend
+# def rank_last_weekend(data, player_id, tournament, year):
+#     last_weekend_ids = course_info_for_tournament(tournament, year)['prev_ids']
+#     if len()
 
 def index_stats_in_data(reindex=False, required_fraction=0.5):
     """ create a single mapping from stats to integers that will
