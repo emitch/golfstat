@@ -61,7 +61,7 @@ def tournament_files_for_years(years):
 
     return tournaments_by_year
 
-def player_data_from_years(years, require_min_rounds=True, dict_by_id=False):
+def player_data_from_years(years, require_min_rounds=True, dict_by_id=True):
     # Find files matching a given year
     selected_files = stat_files_for_years(years)
 
@@ -101,12 +101,13 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=False):
                         name = stat['name']
                         # Normalize names for stat names that have changed
                         name = name.replace(' - ', ': ')
+                        
                         sanitized[name] = {'rank': stat['rank'], 'value': stat['value']}
 
         if len(sanitized):
             if dict_by_id:
                 if player_number not in data:
-                    data[player_number] = {'name': player_name, 'years': {}}
+                    data[player_number] = {'name': player_name}
 
                 if player_year not in data[player_number]:
                     data[player_number][player_year] = {}
@@ -123,7 +124,10 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=False):
     # READ IN TOURNAMENT DATA
     tournament_file_dict = tournament_files_for_years(years)
     leaderboard_dict = {}
+    
+    drives = []
 
+    # FOR EACH TOURNAMENT
     for tournament in tournament_file_dict:
         # Get the course data file
         print('=====================')
@@ -131,40 +135,49 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=False):
 
         leaderboard_dict[tournament] = {}
 
+        # FOR EACH YEAR
         for year in tournament_file_dict[tournament]:
             course_file_path = '/'.join(tournament_file_dict[tournament][year][0]['f'].split('/')[:-1]) + '/course.json'
             course_file = open(course_file_path, 'r')
-            course_data = json.load(course_file)
+            course_data = json.load(course_file)['courses'][0]
             course_file.close()
             course_name = '>> NO COURSE NAME <<'
-            if len(course_data['courses']):
-                course_name = course_data['courses'][0]['name']
+            if course_data:
+                course_name = course_data['name']
             print('Got data from %s (%s)' % (course_name, year))
 
+            # use this later to figure out rankings
             leaderboard_dict[tournament][year] = []
-
+            
+            # go through every player file this year
             for idx, player in enumerate(tournament_file_dict[tournament][year]):
                 pid = player['id']
+                # if this player exists and has stats
                 if pid in data and year in data[pid]:
                     file = open(tournament_file_dict[tournament][year][idx]['f'], 'r')
+                    
+                    # scorecard data for this player for this tournament
                     scorecard_data = json.load(file)
                     file.close()
 
+                    # get the player id
                     player = tournament_file_dict[tournament][year][idx]['id']
-
+                    
+                    # the final dict we will populate
                     this_player_tournament_data = {}
 
-                    # print('Player %s' % (pid))
-
+                    # stick in the raw data to start - we'll also build a summary
                     this_player_tournament_data['scorecard'] = scorecard_data
                     summary = {}
+                    rounds = scorecard_data['p']['rnds']
 
+                    # the number of rounds this player played at this tournament
                     total_rounds = len(scorecard_data['p']['rnds'])
-
-                    # print('\t%s rounds' % (total_rounds))
-
+                    
+                    # scores on each hole (for the entire tournament, all N rounds)
                     hole_scores = []
 
+                    # do we have valid data for this tournament
                     valid_data = True
 
                     for round in scorecard_data['p']['rnds']:
@@ -175,17 +188,99 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=False):
 
                             hole_scores.append(int(hole['sc']))
 
-                    # print('\tTotal Shots: %i' % (sum(hole_scores)))
-
+                    # skip if data is incomplete
                     if valid_data == False:
                         continue
 
+                    # skip if we have a weird number of rounds
                     if total_rounds not in [2,3,4]:
                         continue
 
+                    # populate the easy stuff
                     summary['num_rounds'] =     total_rounds
                     summary['total_shots'] =    sum(hole_scores)
                     summary['course_name'] =    course_name
+                    summary['course_yardage'] =  course_data['yards']
+                    summary['course_par'] = course_data['parValue']
+                    summary['hole_pars'] = []
+                    summary['hole_yardages'] = []
+                    
+                    round_stats = [{} for i in range(total_rounds)]
+                    
+                    for idx, hole in enumerate(course_data['holes']):
+                        try:
+                            par = int(hole['parValue'].split(' / ')[0])
+                        except:
+                            par = 4
+                        try:
+                            yardage = int(hole['yards'].split(' / ')[0])
+                        except:
+                            yardage = 'nan'
+                        summary['hole_pars'].append(str(par))
+                        summary['hole_yardages'].append(str(yardage))
+                        
+                        if 'holes' not in rounds[0] or len(rounds[0]['holes']) == 0:
+                            continue
+                        
+                        # print(total_rounds, rounds)
+                        
+                        for round_num in range(total_rounds):
+                            if 'score' not in round_stats[round_num]:
+                                round_stats[round_num]['score'] = "0"
+                            round_stats[round_num]['score'] = str(int(round_stats[round_num]['score']) + int(rounds[round_num]['holes'][idx]['sc']))
+                            
+                            if 'drives' not in round_stats[round_num]:
+                                round_stats[round_num]['drives'] = []
+                            if 'num_putts' not in round_stats[round_num]:
+                                round_stats[round_num]['num_putts'] = []
+                            
+                            # SOMETIMES WE DON't HAVE INDIVIDUAL SHOT DATA
+                            if par > 3:
+                                if len(rounds[round_num]['holes'][idx]['shots']):
+                                    drive = float(rounds[round_num]['holes'][idx]['shots'][0]['dist']) / 36.0
+                                    if drive < 2:
+                                        round_stats[round_num]['drives'].append('nan')
+                                    else:
+                                        round_stats[round_num]['drives'].append(str(drive))
+                                        drives.append(drive)
+                                else:
+                                    round_stats[round_num]['drives'].append('nan')
+                            else:
+                                round_stats[round_num]['drives'].append('nan')
+                            
+                            putts = 0
+                            for shot in rounds[round_num]['holes'][idx]['shots']:
+                                if len(shot['putt']):
+                                    putts += 1
+                            round_stats[round_num]['num_putts'].append(str(putts))
+                    
+                    if len(rounds[round_num]['holes']) > 0:
+                        for stats in round_stats:
+                            if 'drives' in stats:
+                                tot_drives = 0
+                                num_drives = 0
+                                for drive in stats['drives']:
+                                    if drive != 'nan':
+                                        num_drives += 1
+                                        tot_drives += float(drive)
+                                
+                                if num_drives != 0:
+                                    stats['avg_drive'] = str(tot_drives / num_drives)
+                                else:
+                                    stats['avg_drive'] = 'nan'
+                                
+                                print(stats['avg_drive'])
+                                
+                            if 'putts' in stats:
+                                tot_putts = 0
+                                for putt in stats['num_putts']:
+                                    tot_putts += int(putt)
+                                
+                                stats['putts'] = str(tot_putts)
+                    
+                    # pprint(round_stats)
+                    
+                    summary['round_stats'] = round_stats
 
                     this_player_tournament_data['summary'] = summary
 
@@ -214,10 +309,112 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=False):
 
             leaderboard_dict[tournament][year] = leaderboard
 
-    # pprint(leaderboard_dict)
-    # pprint(data)
-
+    plt.figure()
+    plt.hist(drives, bins=1000)
+    plt.show()
+            
     return data
+    
+def stats_from_tournament(data, tournament_to_find, year, stat):
+    stat_values = []
+    for player in data:
+        if year in data[player]:
+            year_dict = data[player][year]
+            if tournament_to_find in year_dict:
+                if stat in year_dict['stats']:
+                    stat_values.append(float(year_dict['stats'][stat]['value']))
+    return stat_values
+
+def summaries_from_tournament(data, tournament_to_find, year):
+    scorecards = []
+    for p in data:
+        player = data[p]
+        if year in player:
+            year_data = player[year]
+            
+            for t in year_data:
+                if t == 'stats': continue
+                if t == tournament_to_find:
+                    tournament = year_data[t]
+                    scorecards.append(tournament['summary'])
+    
+    return scorecards
+    
+def select_from_summaries(summaries, vals):
+    valid = np.array([int(s['num_rounds']) == 4 for s in summaries])
+    np_scores = np.array(summaries)[valid]
+    np_vals = np.array(vals)[valid]
+    return (np_vals, np_scores)
+
+def stats_and_scores(data, t, y, s):
+    stats = stats_from_tournament(data, t, y, s)
+    par = int(course_info_for_tournament(t, y)['course_par']) * 4
+    summaries = [-(int(s['total_shots'] - par)) for s in summaries_from_tournament(data, t, y)]
+    return select_from_summaries(summaries, stats)
+    
+# extract info about the course for a particular tournament
+def course_info_for_tournament(t, y):
+    if not hasattr(course_info_for_tournament, 'cache'):
+        course_info_for_tournament.cache = {}
+    
+    if t + y in course_info_for_tournament.cache:
+        return course_info_for_tournament.cache[t + y]
+    
+    course_file_path = os.getcwd() + '/scorecards/' + t + '/' + y + '/course.json'
+    
+    course_file = open(course_file_path, 'r')
+    course_data = json.load(course_file)['courses'][0]
+    course_file.close()
+    
+    summary = {}
+    
+    pars = []
+    yardages = []
+    
+    threes, fours, fives = [], [], []
+    if 'holes' in course_data:
+        for hole in course_data['holes']:
+            pars.append(hole['parValue'])
+            yardages.append(hole['yards'])
+            
+            if pars[-1] == '3':
+                threes.append(float(yardages[-1]))
+            elif pars[-1] == '4':
+                fours.append(float(yardages[-1]))
+            else:
+                fives.append(float(yardages[-1]))
+    
+        
+    summary['course_name'] =    course_data['name']
+    if 'yards' in course_data and len(course_data['yards']) > 1:
+        summary['course_yardage'] = course_data['yards']
+    else:
+        summary['course_yardage'] = 'nan'
+        
+    if 'parValue' in course_data and len(course_data['parValue']) > 1:
+        summary['course_par'] =     course_data['parValue']
+    else:
+        summary['course_par'] = 'nan'
+    
+    summary['hole_pars'] =      pars
+    summary['hole_yardages'] =  yardages
+    if len(threes) > 0:
+        summary['three_yardage'] = str(sum(threes) / len(threes))
+    else:
+        summary['three_yardage'] = 'nan'
+    if len(fours) > 0:
+        summary['four_yardage'] = str(sum(fours) / len(fours))
+    else:
+        summary['four_yardage'] = 'nan'
+    if len(fives) > 0:
+        summary['five_yardage'] = str(sum(fives) / len(fives))
+    else:
+        summary['five_yardage'] = 'nan'
+        
+    course_info_for_tournament.cache[t + y] = summary
+    
+    return summary
+    
 
 def index_stats_in_data(reindex=False, required_fraction=0.5):
     """ create a single mapping from stats to integers that will
@@ -429,6 +626,7 @@ if __name__ == "__main__":
     years = [str(y) for y in range(2013, 2017)]
 
     data = player_data_from_years(years, dict_by_id=True)
+    scorecards_from_tournament(data, '010')
     # pprint(data)
 
     # show_stat_over_time(data, 'Putts Per Round', years)
