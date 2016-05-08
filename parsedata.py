@@ -1,4 +1,4 @@
-import sys, os, json
+import sys, os, json, re
 from pprint import pprint
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,7 +8,7 @@ import imageio
 import operator
 
 # stat names corresponding to rankings, should be exluded in stat gathering
-rank_stats = ['All-Around Ranking', 'FedExCup Season Points', 'Money Leaders']
+rank_stats = ['All-Around Ranking', 'FedExCup Season Points', 'Money Leaders', 'Par 3 Birdie or Better Leaders']
 
 def stat_files_for_years(years):
     selected_files = []
@@ -228,7 +228,7 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=True):
                         for round_num in range(total_rounds):
                             if 'score' not in round_stats[round_num]:
                                 round_stats[round_num]['score'] = "0"
-                                
+
                             round_stats[round_num]['score'] = str(int(round_stats[round_num]['score']) + int(rounds[round_num]['holes'][idx]['sc']))
 
                             if 'drives' not in round_stats[round_num]:
@@ -254,7 +254,7 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=True):
                                 if len(shot['putt']):
                                     putts += 1
                             round_stats[round_num]['putts_per_hole'].append(str(putts))
-                    
+
                     for stats in round_stats:
                         if 'drives' in stats:
                             tot_drives = 0
@@ -274,7 +274,7 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=True):
                             tot_putts = 0
                             for putt in stats['putts_per_hole']:
                                 tot_putts += int(putt)
-                            
+
                             if tot_putts > 0:
                                 stats['total_putts'] = str(tot_putts)
                                 putts_list.append(tot_putts)
@@ -311,11 +311,11 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=True):
 
             leaderboard_dict[tournament][year] = leaderboard
 
-    plt.figure()
-    plt.hist(drives, bins=2000)
-    plt.figure()
-    plt.hist(putts_list, bins=20)
-    plt.show()
+    # plt.figure()
+    # plt.hist(drives, bins=2000)
+    # plt.figure()
+    # plt.hist(putts_list, bins=20)
+    # plt.show()
 
     return data
 
@@ -371,20 +371,21 @@ def course_info_for_tournament(t, y):
                 if year not in course_info_for_tournament.cache:
                     course_info_for_tournament.cache[year] = {}
                     
-                # file path for this tournament/year
                 course_file_path = os.getcwd() + '/scorecards/' + tournament + '/' + year + '/course.json'
-                
-                # open/read the json
-                course_file = open(course_file_path, 'r')
-                course_data = json.load(course_file)['courses'][0]
-                course_file.close()
 
-                # the summary dict for this tournament/year that we will ultimately return
+                try:
+                    course_file = open(course_file_path, 'r')
+                    course_data = json.load(course_file)['courses'][0]
+                    course_file.close()
+                except FileNotFoundError:
+                    course_info_for_tournament.cache[year][tournament] = None
+                    return None
+
                 summary = {}
 
-                # gather the data for hole pars and yardages, as well as yardages by hole par
                 pars = []
                 yardages = []
+
                 threes, fours, fives = [], [], []
                 if 'holes' in course_data:
                     for hole in course_data['holes']:
@@ -397,44 +398,39 @@ def course_info_for_tournament(t, y):
                             fours.append(float(yardages[-1]))
                         else:
                             fives.append(float(yardages[-1]))
-                            
+
+
                 # set the week in the schedule/name for this tournament
                 summary['week'] =           course_data['week']
-                summary['course_name'] =    course_data['name']
-
-                # we should always have the course yardage, but we'll be defensive
+                summary['course_name'] = course_data['name']
                 if 'yards' in course_data and len(course_data['yards']) > 1:
-                    summary['course_yardage'] = course_data['yards']
+                    summary['course_yardage'] = float(re.sub('\D','',course_data['yards']))
                 else:
                     summary['course_yardage'] = np.nan
 
-                # we should always have the course par, but we'll be defensive here too
                 if 'parValue' in course_data and len(course_data['parValue']) > 1:
-                    summary['course_par'] =     course_data['parValue']
+                    summary['course_par'] = float(course_data['parValue'])
                 else:
                     summary['course_par'] = np.nan
 
-                # stick in the hole pars/yardages
-                summary['hole_pars'] =      pars
-                summary['hole_yardages'] =  yardages
-
-                # if we have individual hole numbers, stick in the averages
+                summary['hole_pars'] = pars
+                summary['hole_yardages'] = yardages
                 if len(threes) > 0:
-                    summary['three_yardage'] = sum(threes) / len(threes)
+                    summary['three_yardage'] = float(sum(threes) / len(threes))
                 else:
                     summary['three_yardage'] = np.nan
                 if len(fours) > 0:
-                    summary['four_yardage'] = sum(fours) / len(fours)
+                    summary['four_yardage'] = float(sum(fours) / len(fours))
                 else:
                     summary['four_yardage'] = np.nan
                 if len(fives) > 0:
-                    summary['five_yardage'] = sum(fives) / len(fives)
+                    summary['five_yardage'] = float(sum(fives) / len(fives))
                 else:
                     summary['five_yardage'] = np.nan
-
+                
                 # put our result in the cache
                 course_info_for_tournament.cache[year][tournament] = summary
-        
+                    
         for year in years:
             for tournament in course_info_for_tournament.cache[year]:
                 # use this tournament's week as the default
@@ -458,13 +454,12 @@ def course_info_for_tournament(t, y):
                 
                 print(year, this_week, prev_week, tournament, prev_ids)
 
-
     return course_info_for_tournament.cache[y][t]
 
 # get the finish of a player the previous weekend
-def rank_last_weekend(data, player_id, tournament, year):
-    last_weekend_ids = course_info_for_tournament(tournament, year)['prev_ids']
-    if len()
+# def rank_last_weekend(data, player_id, tournament, year):
+#     last_weekend_ids = course_info_for_tournament(tournament, year)['prev_ids']
+#     if len()
 
 def index_stats_in_data(reindex=False, required_fraction=0.5):
     """ create a single mapping from stats to integers that will
@@ -483,10 +478,10 @@ def index_stats_in_data(reindex=False, required_fraction=0.5):
     else:
         print('Indexing stats...')
         # load data from all years
-        start_year = 1980
-        end_year = 2015
+        start_year = 2014
+        end_year = 2016
         data = player_data_from_years(
-            [str(x) for x in range(start_year, end_year+1)])
+            [str(x) for x in range(start_year, end_year+1)], dict_by_id=False)
 
         # initialize empty data structures
         appearances = {}
@@ -628,8 +623,8 @@ def show_stat_over_time(data, stat_name, years):
     for year in years:
         stat_distributions_by_year[year] = {}
 
-    min_val = sys.maxint
-    max_val = -sys.maxint
+    min_val = sys.maxsize
+    max_val = -sys.maxsize
     for player_data in data:
         stats = player_data['stats']
         for stat in stats:
@@ -670,13 +665,13 @@ def show_stat_over_time(data, stat_name, years):
 
 if __name__ == "__main__":
     # Re-index stats
-    # index_stats_in_data(reindex=True)
+    index_stats_in_data(reindex=True)
 
     # The years we want to look at
-    years = [str(y) for y in range(2013, 2017)]
+    #years = [str(y) for y in range(2013, 2017)]
 
-    data = player_data_from_years(years, dict_by_id=True)
-    scorecards_from_tournament(data, '010')
+    #data = player_data_from_years(years, dict_by_id=True)
+    #scorecards_from_tournament(data, '010')
     # pprint(data)
 
     # show_stat_over_time(data, 'Putts Per Round', years)
