@@ -190,6 +190,51 @@ def compile_unbiased_stats_and_results(data, stat_as_index):
 
     return biased_stats, scores
 
+def hole_stat_bias(data, tourn_id, years, h):
+    raise
+     """ Calculate the spearman correlation of each stat with tournament
+    performance on a given hole, indicating how important each stat
+    is for success on a hole """
+    # get years for tournament
+    if years is None:
+        years = [x for x in os.listdir('scorecards/' + tourn_id) if x.isdigit()]
+    # get scores for each player
+    scores = []
+    for year in years:
+        players = players_in_tourn(tourn_id, year)
+        for player in players:
+            # skip missing players
+            if player not in data: continue
+            if year not in data[player]: continue
+            if tourn_id not in data[player][year]: continue
+
+            # compile performance and stuff
+            score = data[player][year][tourn_id]['scorecard']['h'][h-1]['sc']
+
+            scores.append()
+
+    # initialize vector of spearman correlations
+    corrs = np.empty(len(stat_as_index))
+    for stat in stat_as_index:
+        # vector of stat for each player
+        stats = []
+        for year in years:
+            players = players_in_tourn(tourn_id, year)
+            for player in players:
+                # skip missing players
+                if player not in data: continue
+                if year not in data[player]: continue
+                if tourn_id not in data[player][year]: continue
+                # compile performance and stuff
+                try: val = parse_stat(data[player][year]['stats'][stat]['value'])
+                except KeyError: val = np.nan
+                stats.append(val)
+
+        # calculate correlation
+        corrs[stat_as_index[stat]], _ = spearmanr(scores, stats)
+
+    return corrs, info
+
 if __name__ == '__main__':
     # load data
     import parsedata

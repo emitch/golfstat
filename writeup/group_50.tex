@@ -1,0 +1,72 @@
+\documentclass[margin = 0.5in] {article}% For LaTeX2e
+\usepackage{cos424,times}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{graphicx}
+
+
+
+\title{GOLF  }
+
+\author{
+\textbf{Rob Whitaker}, 
+Physics \\
+\texttt{rmw2@princeton.edu} \\
+\textbf{Eric Mitchell}, 
+Computer Science \\
+\texttt{eam6@princeton.edu} \\
+}
+
+\newcommand{\fix}{\marginpar{FIX}}
+\newcommand{\new}{\marginpar{NEW}}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\end{abstract}
+
+\section{Introduction}
+Motivating ideas in the golf world.  What exists in terms of stats?  [Describe pga tour stats etc.] What exists in terms of prediction? [betting odds etc.]  Machine learning methods are difficult because the data is very intricate, though detailed.\\
+
+Principle issue is in integrating two distinct datasets: player year-end statistics (henceforth ``stats"), and the specifics of a given tournament course.  [Discuss this more, give examples, pretend to be a humanities person.] \\
+
+Things we would like to understand: The best players in the world are interesting to study and we can make predictions about their relative rankings on important tournaments, but the place where automated prediction becomes really important is for players outside of the critical spotlight.  Players that are good enough to be on the PGA tour and have data collected about their performance, but not good enough for a golf afficianado to analyze their game enough to make predictions are left out.  Simple questions like making the cut etc etc
+
+\section{Related Work}
+
+\section{Methods}
+\subsection{Data}
+Discuss scraping and pre-pre-processing aka all the crazy fucking json files, milk this for difficulty of the scraping part.
+
+\subsection{Exploring Golf Stats}
+This is our year-end standing predictions from 
+
+\subsection{Predicting Tournament Results}
+The logic of our approach was as follows: different courses bring different challenges, and while a naive approach modeling the results based on season stats alone may shed some insights into the importance of different skills for the game in general, general sports wisdom and observation suggest that different courses (and different holes) have their own keys for success.  Rather than fitting a new model to every course, or worse for every hole in the game, we attempted to train a single model while correcting for the biases that different courses introduce into the final results. 
+
+As an illustrative example, being able to escape a sand trap is an important skill, but it likely will not enter the calculus on a hole with no sand traps.  Our task was then to correct for these biases before player stats were fed to our models.  We accomplished this with two similar approaches: bias correction by course and by hole.  We first calculated the correlation of each stat with 
+
+\subsection{Models}
+
+\section{Results}
+How well did we do? 
+
+\section{Discussion and Conclusion}
+What does this say about golf in general, how can this be used by people, did we succeed in any of our goals?
+
+
+\section{Further Research}
+All the techniques we thought of but couldn't implement.
+
+\clearpage
+
+\subsubsection*{References}
+
+Discussion references:
+
+
+Code references:
+
+\end{document}
