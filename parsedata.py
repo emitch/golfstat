@@ -126,6 +126,7 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=True):
     leaderboard_dict = {}
 
     drives = []
+    putts_list = []
 
     # FOR EACH TOURNAMENT
     for tournament in tournament_file_dict:
@@ -144,7 +145,7 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=True):
             course_name = '>> NO COURSE NAME <<'
             if course_data:
                 course_name = course_data['name']
-            print('Got data from %s (%s)' % (course_name, year))
+            print('Getting data from %s (%s)' % (course_name, year))
 
             # use this later to figure out rankings
             leaderboard_dict[tournament][year] = []
@@ -152,6 +153,7 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=True):
             # go through every player file this year
             for idx, player in enumerate(tournament_file_dict[tournament][year]):
                 pid = player['id']
+                print('\rGetting player %s' % (pid), end='')
                 # if this player exists and has stats
                 if pid in data and year in data[pid]:
                     file = open(tournament_file_dict[tournament][year][idx]['f'], 'r')
@@ -227,22 +229,22 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=True):
                         for round_num in range(total_rounds):
                             if 'score' not in round_stats[round_num]:
                                 round_stats[round_num]['score'] = "0"
+                                
                             round_stats[round_num]['score'] = str(int(round_stats[round_num]['score']) + int(rounds[round_num]['holes'][idx]['sc']))
 
                             if 'drives' not in round_stats[round_num]:
                                 round_stats[round_num]['drives'] = []
-                            if 'num_putts' not in round_stats[round_num]:
-                                round_stats[round_num]['num_putts'] = []
+                            if 'putts_per_hole' not in round_stats[round_num]:
+                                round_stats[round_num]['putts_per_hole'] = []
 
                             # SOMETIMES WE DON't HAVE INDIVIDUAL SHOT DATA
                             if par > 3:
                                 if len(rounds[round_num]['holes'][idx]['shots']):
                                     drive = float(rounds[round_num]['holes'][idx]['shots'][0]['dist']) / 36.0
-                                    if drive < 2:
+                                    if drive < 200:
                                         round_stats[round_num]['drives'].append('nan')
                                     else:
                                         round_stats[round_num]['drives'].append(str(drive))
-                                        drives.append(drive)
                                 else:
                                     round_stats[round_num]['drives'].append('nan')
                             else:
@@ -252,31 +254,34 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=True):
                             for shot in rounds[round_num]['holes'][idx]['shots']:
                                 if len(shot['putt']):
                                     putts += 1
-                            round_stats[round_num]['num_putts'].append(str(putts))
+                            round_stats[round_num]['putts_per_hole'].append(str(putts))
+                    
+                    for stats in round_stats:
+                        if 'drives' in stats:
+                            tot_drives = 0
+                            num_drives = 0
+                            for drive in stats['drives']:
+                                if drive != 'nan':
+                                    num_drives += 1
+                                    tot_drives += float(drive)
 
-                    if len(rounds[round_num]['holes']) > 0:
-                        for stats in round_stats:
-                            if 'drives' in stats:
-                                tot_drives = 0
-                                num_drives = 0
-                                for drive in stats['drives']:
-                                    if drive != 'nan':
-                                        num_drives += 1
-                                        tot_drives += float(drive)
+                            if num_drives != 0:
+                                stats['avg_drive'] = str(tot_drives / num_drives)
+                                drives.append(tot_drives / num_drives)
+                            else:
+                                stats['avg_drive'] = 'nan'
 
-                                if num_drives != 0:
-                                    stats['avg_drive'] = str(tot_drives / num_drives)
-                                else:
-                                    stats['avg_drive'] = 'nan'
-
-                                print(stats['avg_drive'])
-
-                            if 'putts' in stats:
-                                tot_putts = 0
-                                for putt in stats['num_putts']:
-                                    tot_putts += int(putt)
-
-                                stats['putts'] = str(tot_putts)
+                        if 'putts_per_hole' in stats:
+                            tot_putts = 0
+                            for putt in stats['putts_per_hole']:
+                                tot_putts += int(putt)
+                            
+                            if tot_putts > 0:
+                                stats['total_putts'] = str(tot_putts)
+                                putts_list.append(tot_putts)
+                            else:
+                                stats['total_putts'] = 'nan'
+                                stats['putts_per_hole'] = ['nan' for p in stats['putts_per_hole']]
 
                     # pprint(round_stats)
 
@@ -310,7 +315,9 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=True):
             leaderboard_dict[tournament][year] = leaderboard
 
     plt.figure()
-    plt.hist(drives, bins=1000)
+    plt.hist(drives, bins=2000)
+    plt.figure()
+    plt.hist(putts_list, bins=20)
     plt.show()
 
     return data
