@@ -101,8 +101,6 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=True):
                         name = stat['name']
                         # Normalize names for stat names that have changed
                         name = name.replace(' - ', ': ')
-                        if name == 'Par 3 Birdie or Better Leaders':
-                            print(name, stat['value'])
                         sanitized[name] = {'rank': stat['rank'], 'value': stat['value']}
 
         if len(sanitized):
@@ -283,9 +281,7 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=True):
                             else:
                                 stats['total_putts'] = 'nan'
                                 stats['putts_per_hole'] = ['nan' for p in stats['putts_per_hole']]
-
-                    # pprint(round_stats)
-
+                    
                     summary['round_stats'] = round_stats
 
                     this_player_tournament_data['summary'] = summary
@@ -365,8 +361,8 @@ def course_info_for_tournament(t, y):
     # build the cache if this is the first call (static function variable)
     if not hasattr(course_info_for_tournament, 'cache'):
         course_info_for_tournament.cache = {}
-        
-        tournament_file_dict = tournament_files_for_years(['2014', '2015', '2016'])
+        years = ['2014', '2015', '2016']
+        tournament_file_dict = tournament_files_for_years(years)
             
         # FOR EACH TOURNAMENT
         for tournament in tournament_file_dict:
@@ -394,16 +390,15 @@ def course_info_for_tournament(t, y):
                     for hole in course_data['holes']:
                         pars.append(float(hole['parValue'].split(' / ')[0]))
                         yardages.append(hole['yards'].split(' / ')[0])
-
-                        if pars[-1] == '3':
+                        
+                        if int(pars[-1]) == 3:
                             threes.append(float(yardages[-1]))
-                        elif pars[-1] == '4':
+                        elif int(pars[-1]) == 4:
                             fours.append(float(yardages[-1]))
                         else:
                             fives.append(float(yardages[-1]))
-
+                            
                 # set the week in the schedule/name for this tournament
-                print(tournament, year)
                 summary['week'] =           course_data['week']
                 summary['course_name'] =    course_data['name']
 
@@ -440,15 +435,36 @@ def course_info_for_tournament(t, y):
                 # put our result in the cache
                 course_info_for_tournament.cache[year][tournament] = summary
         
-    for year in course_info_for_tournament.cache:
-        for tournament in course_info_for_tournament.cache[year]:
-            # print(year, tournament)
-            print(course_info_for_tournament.cache[year][tournament]['course_par'], tournament, year)
+        for year in years:
+            for tournament in course_info_for_tournament.cache[year]:
+                # use this tournament's week as the default
+                prev_week = -sys.maxsize
                 
+                this_week = int(course_info_for_tournament.cache[year][tournament]['week'])
+                prev_ids = []
+                
+                for other_tournament in course_info_for_tournament.cache[year]:
+                    other_week = int(course_info_for_tournament.cache[year][other_tournament]['week'])
+                    # print('', other_week)
+                    if other_week >= prev_week and other_week < this_week:
+                        if other_week == prev_week:
+                            prev_ids.append(other_tournament)
+                        else:
+                            prev_week = other_week
+                            prev_ids = [other_tournament]
+                            
+                if this_week - prev_week > 2: prev_ids = [np.nan]
+                course_info_for_tournament.cache[year][tournament]['prev_ids'] = prev_ids
+                
+                print(year, this_week, prev_week, tournament, prev_ids)
 
 
     return course_info_for_tournament.cache[y][t]
 
+# get the finish of a player the previous weekend
+def rank_last_weekend(data, player_id, tournament, year):
+    last_weekend_ids = course_info_for_tournament(tournament, year)['prev_ids']
+    if len()
 
 def index_stats_in_data(reindex=False, required_fraction=0.5):
     """ create a single mapping from stats to integers that will
