@@ -1,0 +1,19 @@
+3-Putt Avoidance
+Overall Putting Average
+Putts Per Round
+Scrambling
+Average Distance of Putts made
+Scrambling from the Rough
+Going for the Green: Hit Green Pct.
+Driving Distance
+Driving Accuracy Percentage
+Approach Putt Performance
+Rough Proximity
+One-Putt Percentage
+Total Driving
+Sand Save Percentage
+Ball Striking
+Proximity to Hole
+Greens in Regulation Percentage
+Distance from Edge of Fairway
+Fairway Proximity
