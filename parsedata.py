@@ -282,7 +282,7 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=True):
                             else:
                                 stats['total_putts'] = 'nan'
                                 stats['putts_per_hole'] = ['nan' for p in stats['putts_per_hole']]
-                    
+
                     summary['round_stats'] = round_stats
 
                     this_player_tournament_data['summary'] = summary
@@ -364,14 +364,14 @@ def course_info_for_tournament(t, y):
         course_info_for_tournament.cache = {}
         years = ['2014', '2015', '2016']
         tournament_file_dict = tournament_files_for_years(years)
-            
+
         # FOR EACH TOURNAMENT
         for tournament in tournament_file_dict:
             # FOR EACH YEAR
             for year in tournament_file_dict[tournament]:
                 if year not in course_info_for_tournament.cache:
                     course_info_for_tournament.cache[year] = {}
-                    
+
                 course_file_path = os.getcwd() + '/scorecards/' + tournament + '/' + year + '/course.json'
 
                 try:
@@ -392,7 +392,7 @@ def course_info_for_tournament(t, y):
                     for hole in course_data['holes']:
                         pars.append(float(hole['parValue'].split(' / ')[0]))
                         yardages.append(hole['yards'].split(' / ')[0])
-                        
+
                         if int(pars[-1]) == 3:
                             threes.append(float(yardages[-1]))
                         elif int(pars[-1]) == 4:
@@ -428,18 +428,18 @@ def course_info_for_tournament(t, y):
                     summary['five_yardage'] = float(sum(fives) / len(fives))
                 else:
                     summary['five_yardage'] = np.nan
-                
+
                 # put our result in the cache
                 course_info_for_tournament.cache[year][tournament] = summary
-                    
+
         for year in years:
             for tournament in course_info_for_tournament.cache[year]:
                 # use this tournament's week as the default
                 prev_week = -sys.maxsize
-                
+
                 this_week = int(course_info_for_tournament.cache[year][tournament]['week'])
                 prev_ids = []
-                
+
                 for other_tournament in course_info_for_tournament.cache[year]:
                     other_week = int(course_info_for_tournament.cache[year][other_tournament]['week'])
                     # print('', other_week)
@@ -449,11 +449,11 @@ def course_info_for_tournament(t, y):
                         else:
                             prev_week = other_week
                             prev_ids = [other_tournament]
-                            
-                if this_week - prev_week > 2: prev_ids = [np.nan]
+
+                if this_week - prev_week > 2: prev_ids = []
                 course_info_for_tournament.cache[year][tournament]['prev_ids'] = prev_ids
-                
-                print(year, this_week, prev_week, tournament, prev_ids)
+
+    if t not in course_info_for_tournament.cache[y]: return None
 
     return course_info_for_tournament.cache[y][t]
 
