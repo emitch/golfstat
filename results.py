@@ -2,9 +2,15 @@ from bs4 import BeautifulSoup as Soup
 from scipy.stats import spearmanr
 import requests, json, os, parsedata
 import numpy as np
+
+from sklearn.decompositions import PCA
 from sklearn.cross_validation import KFold
 from sklearn.preprocessing import Imputer
 from sklearn.linear_model import LassoCV, RidgeCV, ElasticNetCV, LinearRegression
+
+###############################################################################
+# SCRAPING METHODS: RUN ONCE AND NEVER AGAIN
+###############################################################################
 
 def scrape_scorecards():
     """ mine the pgatour data endpoint for individual tournament scorecards
@@ -80,6 +86,10 @@ def scrape_courses():
             data = requests.get(baseurl + path).text
             with open('scorecards/' + path, 'w') as file: file.write(data)
 
+###############################################################################
+# END OF SCRAPING METHODS
+###############################################################################
+
 def players_in_tourn(tourn_id, year):
     """ return an iterable of player ids corresponding to tournament
     participation """
@@ -93,7 +103,6 @@ def players_in_tourn(tourn_id, year):
         if player_id.isdigit(): players.append(player_id)
 
     return players
-
 
 def course_stat_bias(data, tourn_id, stat_as_index, years=None):
     """ Calculate the spearman correlation of each stat with tournament
@@ -195,7 +204,9 @@ def include_last_tourn(player, course, biases, stat_as_index):
     n_stats = len(basic)
     fv = np.empty(n_stats + 1)
     fv[:-1] = basic
-    fv[-1] =
+    fv[-1] = parsedata.rank_last_weekend(player, course)
+
+    return fv
 
 ###############################################################################
 # END OF FEATURE VECTOR BUILDING
@@ -286,7 +297,7 @@ def build_fvs(data, year, stat_as_index, make_vector=basic_fv):
 
 #     return corrs, info
 
-def test_model(data, stat_as_index, make_vector, regressor):
+def test_model(data, stat_as_index, make_vector, regressor, do_pca=False):
     # compile and shit
     print('Compiling stats...')
     fv, sc = [], []
@@ -310,14 +321,12 @@ def test_model(data, stat_as_index, make_vector, regressor):
     # Compile into single vectors: Predict 2016 from 2014 and 2015
     fv_train, fv_test = np.vstack(fv[0:2]), fv[2]
     sc_train, sc_test = np.concatenate(sc[0:2]), sc[2]
-    
-    print(fv_train.shape, sc_train.shape, fv_test.shape, sc_test.shape)
 
+    # Impute NaNs
     train_nan = np.isnan(fv_train)
     test_nan = np.isnan(fv_test)
 
-    # Impute NaNs
-    print('Imputing')
+    print('Imputing...')
     if train_nan.any():
         i1 = Imputer()
         fv_train = i1.fit_transform(fv_train)
@@ -327,13 +336,15 @@ def test_model(data, stat_as_index, make_vector, regressor):
         fv_test = i2.fit_transform(fv_test)
         print(i2.statistics_)
 
-    print(fv_train.shape, sc_train.shape, fv_test.shape, sc_test.shape)
+    if do_pca:
+        pca = PCA(whiten=True)
+        fv_train = pca.fit_transform(fv_train)
+        fv_test = pca.transform(fv_test)
+
     # Exclude players with missing scores
     train_nan, test_nan = np.isnan(sc_train), np.isnan(sc_test)
     fv_train, sc_train = fv_train[~train_nan], sc_train[~train_nan]
     fv_test, sc_test = fv_test[~test_nan], sc_test[~test_nan]
-    
-    print(fv_train.shape, sc_train.shape, fv_test.shape, sc_test.shape)
 
     # Build model
     mod = regressor
@@ -357,17 +368,18 @@ if __name__ == '__main__':
 
     # compile and shit
     print('Basic FV, Lasso')
-    test_model(data, stat_as_index, basic_fv, LassoCV())
+    test_model(data, stat_as_index, include_last_tourn, LassoCV())
 
-    # try again with whitelist
-    whitelist = ['Birdie Average', 'Scrambling', 'Scrambling from the Rough',
-        'Scoring Average', 'Sand Save Percentage', 'Driving Distance']
 
-    wl = {}
-    for i, stat in enumerate(whitelist): wl[stat] = i
-    print('Whitelisted stats')
-    test_model(data, wl, basic_fv, LinearRegression())
+    # # try again with whitelist
+    # whitelist = ['Birdie Average', 'Scrambling', 'Scrambling from the Rough',
+    #     'Scoring Average', 'Sand Save Percentage', 'Driving Distance']
 
-    print('POOP')
-    test_model(data, wl, include_distance, LinearRegression())
+    # wl = {}
+    # for i, stat in enumerate(whitelist): wl[stat] = i
+    # print('Whitelisted stats')
+    # test_model(data, wl, basic_fv, LinearRegression())
+
+    # print('POOP')
+    # test_model(data, wl, include_distance, LinearRegression())
 

@@ -428,7 +428,7 @@ def course_info_for_tournament(t, y):
                     summary['five_yardage'] = float(sum(fives) / len(fives))
                 else:
                     summary['five_yardage'] = np.nan
-                    
+
                 # put our result in the cache
                 course_info_for_tournament.cache[year][tournament] = summary
 
@@ -457,15 +457,19 @@ def course_info_for_tournament(t, y):
     return course_info_for_tournament.cache[y][t]
 
 # get the finish of a player the previous weekend
-def rank_last_weekend(data, player_id, tournament, year):
-    last_weekend_ids = course_info_for_tournament(tournament, year)['prev_ids']
+def rank_last_weekend(player_data, course_info):
+    last_weekend_ids = course_info['prev_ids']
     if len(last_weekend_ids) == 0: return np.nan
-    
+
     for tournament_id in last_weekend_ids:
-        if tournament_id in data[player_id][year]:
-            t = data[player_id][year][tournament_id]['summary']
-            return int(t['rank'])
-            
+        if tournament_id in player_data:
+            t = player_data[tournament_id]['summary']
+            if t['rank'] == 'mc':
+                # honestly don't ask
+                return 100
+            else:
+                return int(t['rank'])
+
     return np.nan
 
 def index_stats_in_data(reindex=False, required_fraction=0.5):
