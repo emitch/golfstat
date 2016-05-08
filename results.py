@@ -152,10 +152,44 @@ def parse_stat(raw_val):
         except: val = np.nan
     return val
 
-def compile_unbiased_stats_and_results(data, stat_as_index):
-    """ train a model to predict performance on the level of tournaments
-    using individual player stats and their importance for each course """
+###############################################################################
+# METHODS FOR BUILDING A FEATURE VECTOR
+# ANY OF THESE CAN BE PASSED TO build_fvs()
+###############################################################################
+
+def basic_fv(player, course, biases, stat_as_index):
+    # multiply stats by their bias
     n_stats = len(stat_as_index)
+    fv = np.empty(n_stats)
+    for stat in stat_as_index:
+        try: val = parse_stat(player['stats'][stat]['value'])
+        except KeyError: val = np.nan
+        fv[stat_as_index[stat]] = biases[tourn][stat_as_index[stat]] * val
+
+    return fv
+
+def include_distance(player, course, biases, stat_as_index):
+    # basic_fv but also append driving ratio and stuff
+    basic = basic_fv(data, course_info, biases, stat_as_index)
+    n_stats = len(basic)
+    fv = np.empty(n_stats + 3)
+    # get each other stat
+    dist = player['stats']['Driving Distance']
+    fv[-3] = float(course_info['three_yardage']) / dist
+    fv[-2] = float(course_info['four_yardage']) / dist
+    fv[-1] = float(course_info['five_yardage']) / dist
+
+    return fv
+
+###############################################################################
+# END OF FEATURE VECTOR BUILDING
+###############################################################################
+
+def build_fvs(data, stat_as_index, compute_vector=basic_fv):
+    """ train a model to predict performance on the level of tournaments
+    using individual player stats and their importance for each course.
+    The function compute_vector is the one that builds a feature vector from
+    the input data: data, biases, and stat_as_index """
     # First gather all the course biases, final feature vectors are player stats
     # modulated by the degree to which a given stat predicts success on a course
     biases = {}
@@ -171,17 +205,16 @@ def compile_unbiased_stats_and_results(data, stat_as_index):
         for year in data[player]:
             for tourn in data[player][year]:
                 if not tourn.isdigit(): continue
+                # get any additional course data
+                course_info = course_info_for_tournament(tourn, year)
                 # make feature vectors
-                fv = np.empty(n_stats)
-                for stat in stat_as_index:
-                    try: val = parse_stat(data[player][year]['stats'][stat]['value'])
-                    except KeyError: val = np.nan
-                    fv[stat_as_index[stat]] = biases[tourn][stat_as_index[stat]] * val
+                fv = compute_vector(data[player][year], course_info, biases, stat_as_index)
                 # add to running list
                 feature_vector_list.append(fv)
                 # get results
                 shots = data[player][year][tourn]['summary']['total_shots']
                 rnds = data[player][year][tourn]['summary']['num_rounds']
+
                 scores.append(float(shots)/float(rnds))
 
     # concatenate list into single np matrix
@@ -192,7 +225,7 @@ def compile_unbiased_stats_and_results(data, stat_as_index):
 
 def hole_stat_bias(data, tourn_id, years, h):
     raise
-     """ Calculate the spearman correlation of each stat with tournament
+    """ Calculate the spearman correlation of each stat with tournament
     performance on a given hole, indicating how important each stat
     is for success on a hole """
     # get years for tournament
@@ -244,7 +277,8 @@ if __name__ == '__main__':
         stat_as_index = json.load(f)
     # compile and shit
     print('Compiling stats...')
-    bs, sc = compile_unbiased_stats_and_results(data, stat_as_index)
+    bs, sc = build_fvs(
+        data, stat_as_index, compute_vector=include_distance)
     # impute NaNs
     print('Imputing...')
     imp = Imputer()
@@ -266,4 +300,6 @@ if __name__ == '__main__':
     err = pred - sc
     rmse = np.nanmean(err ** 2) ** .5
     print('Root-mean-square-error: %.4d' % rmse)
+
+    # look at correlations with stats
 
