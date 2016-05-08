@@ -310,6 +310,8 @@ def test_model(data, stat_as_index, make_vector, regressor):
     # Compile into single vectors: Predict 2016 from 2014 and 2015
     fv_train, fv_test = np.vstack(fv[0:2]), fv[2]
     sc_train, sc_test = np.concatenate(sc[0:2]), sc[2]
+    
+    print(fv_train.shape, sc_train.shape, fv_test.shape, sc_test.shape)
 
     train_nan = np.isnan(fv_train)
     test_nan = np.isnan(fv_test)
@@ -325,10 +327,13 @@ def test_model(data, stat_as_index, make_vector, regressor):
         fv_test = i2.fit_transform(fv_test)
         print(i2.statistics_)
 
+    print(fv_train.shape, sc_train.shape, fv_test.shape, sc_test.shape)
     # Exclude players with missing scores
     train_nan, test_nan = np.isnan(sc_train), np.isnan(sc_test)
     fv_train, sc_train = fv_train[~train_nan], sc_train[~train_nan]
     fv_test, sc_test = fv_test[~test_nan], sc_test[~test_nan]
+    
+    print(fv_train.shape, sc_train.shape, fv_test.shape, sc_test.shape)
 
     # Build model
     mod = regressor

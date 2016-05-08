@@ -428,7 +428,7 @@ def course_info_for_tournament(t, y):
                     summary['five_yardage'] = float(sum(fives) / len(fives))
                 else:
                     summary['five_yardage'] = np.nan
-
+                    
                 # put our result in the cache
                 course_info_for_tournament.cache[year][tournament] = summary
 
@@ -449,7 +449,6 @@ def course_info_for_tournament(t, y):
                         else:
                             prev_week = other_week
                             prev_ids = [other_tournament]
-
                 if this_week - prev_week > 2: prev_ids = []
                 course_info_for_tournament.cache[year][tournament]['prev_ids'] = prev_ids
 
@@ -458,9 +457,16 @@ def course_info_for_tournament(t, y):
     return course_info_for_tournament.cache[y][t]
 
 # get the finish of a player the previous weekend
-# def rank_last_weekend(data, player_id, tournament, year):
-#     last_weekend_ids = course_info_for_tournament(tournament, year)['prev_ids']
-#     if len()
+def rank_last_weekend(data, player_id, tournament, year):
+    last_weekend_ids = course_info_for_tournament(tournament, year)['prev_ids']
+    if len(last_weekend_ids) == 0: return np.nan
+    
+    for tournament_id in last_weekend_ids:
+        if tournament_id in data[player_id][year]:
+            t = data[player_id][year][tournament_id]['summary']
+            return int(t['rank'])
+            
+    return np.nan
 
 def index_stats_in_data(reindex=False, required_fraction=0.5):
     """ create a single mapping from stats to integers that will
