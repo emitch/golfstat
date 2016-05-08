@@ -4,7 +4,7 @@ import requests, json, os, parsedata
 import numpy as np
 from sklearn.cross_validation import KFold
 from sklearn.preprocessing import Imputer
-from sklearn.linear_model import LassoCV, RidgeCV, ElasticNetCV
+from sklearn.linear_model import LassoCV, RidgeCV, ElasticNetCV, LinearRegression
 
 def scrape_scorecards():
     """ mine the pgatour data endpoint for individual tournament scorecards
@@ -342,3 +342,12 @@ if __name__ == '__main__':
     # compile and shit
     print('Basic FV, Lasso')
     test_model(data, stat_as_index, basic_fv, LassoCV())
+
+    # try again with whitelist
+    whitelist = ['Birdie Average', 'Scrambling', 'Scrambling from the Rough',
+        'Scoring Average', 'Sand Save Percentage', 'Driving Distance']
+
+    wl = {}
+    for i, stat in enumerate(whitelist): wl[stat] = i
+    print('Whitelisted stats')
+    test_model(data, wl, basic_fv, LinearRegression())

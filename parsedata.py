@@ -8,7 +8,8 @@ import imageio
 import operator
 
 # stat names corresponding to rankings, should be exluded in stat gathering
-rank_stats = ['All-Around Ranking', 'FedExCup Season Points', 'Money Leaders', 'Par 3 Birdie or Better Leaders']
+rank_stats = ['All-Around Ranking', 'FedExCup Season Points',
+'Money Leaders', 'Official World Golf Ranking']
 
 def stat_files_for_years(years):
     selected_files = []
