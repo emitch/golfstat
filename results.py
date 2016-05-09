@@ -364,14 +364,14 @@ def test_model(data, stat_as_index, make_vector, regressor, do_pca=False):
 
     return rmse, mod
 
-def show_bias(data, year, stat_as_index, stats_to_show, tourns_to_show):
+def show_bias(data, year, stat_as_index, stats_to_show, tourns_to_show, tourn_names=None):
     # get biases
     biases = compute_biases(data, stat_as_index, year)
 
     n_groups = len(tourns_to_show)
     n_stats = len(stats_to_show)
     bar_width = 0.9 / n_stats
-    colors = ['c','m','y','k']
+    colors = ['c','m','y','k','g']
 
     # plot those motherfuckers
     fig = plt.figure()
@@ -379,12 +379,13 @@ def show_bias(data, year, stat_as_index, stats_to_show, tourns_to_show):
         for j, stat in enumerate(stats_to_show):
             offset = j*bar_width
             plt.bar(i + 0.5 + offset, abs(biases[tourn][stat_as_index[stat]]),
-                bar_width, color=colors[j%(n_stats-1)])
+                bar_width, color=colors[j%(n_stats)])
 
-    plt.xticks(range(1,len(tourns_to_show)+1), tourns_to_show)
-    plt.xlabel('Tournament')
+    if tourn_names is None: tourn_names = tourns_to_show
+
+    plt.xticks(range(1,len(tourns_to_show)+1), tourn_names)
     plt.ylabel('Spearman correlation of stat with score')
-    plt.legend(stats_to_show)
+    plt.legend(stats_to_show, bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=3)
     beautify(fig)
 
     plt.show()
@@ -414,7 +415,8 @@ if __name__ == '__main__':
     stats = ['Driving Distance', 'Scrambling', 'Sand Save Percentage',
         'Overall Putting Average', 'Proximity to Hole']
     tourns = ['010', '012', '013']
-    show_bias(data, '2015', stat_as_index, stats, tourns)
+    names = ['Honda Classic', 'RBC Heritage', 'Wyndham Championship']
+    show_bias(data, '2015', stat_as_index, stats, tourns, names)
 
     # compile and shit
     print('Basic FV, Lasso')
