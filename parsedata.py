@@ -7,6 +7,7 @@ import pylab as pl
 import imageio
 import operator
 import random
+import results
 
 # stat names corresponding to rankings, should be exluded in stat gathering
 rank_stats = ['All-Around Ranking', 'FedExCup Season Points',
@@ -324,6 +325,7 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=True):
 def stats_from_tournament(data, tournament_to_find, year, stat):
     stat_values = []
     for player in data:
+        print(player)
         if year in data[player]:
             year_dict = data[player][year]
             if tournament_to_find in year_dict:
@@ -357,12 +359,12 @@ def stats_and_scores(data, t, y, s):
     par = int(course_info_for_tournament(t, y)['course_par'])
     summaries = [-(int(s['total_shots']) - par * int(s['num_rounds'])) for s in summaries_from_tournament(data, t, y)]
     return select_from_summaries(summaries, stats)
-    
+
 def scores_for_tournament(data, t, y):
     par = int(course_info_for_tournament(t, y)['course_par'])
     s = [-(int(s['total_shots']) - par * int(s['num_rounds'])) for s in summaries_from_tournament(data, t, y)]
     return s
-    
+
 def random_rmse(data):
     cwd = os.getcwd()
     
@@ -383,6 +385,59 @@ def random_rmse(data):
             all_random += [random.choice(all_tscores) for score in all_tscores]
             
     return (sum([(r - s) ** 2 for s, r in zip(all_tscores, all_random)]) / len(all_tscores)) ** .5
+
+def weight_array(array, array2, frac):
+    return [frac * v + (1 - frac) * v2 for v, v2 in zip(array, array2)]
+
+def random_hist(bars):
+    biases = [random.uniform(0, 1) for i in range(bars)]
+
+    n_stats = len(biases)
+    bar_width = 0.9 / n_stats
+    colors = ['c','m','y','k','g']
+
+    # plot those motherfuckers
+    fig = plt.figure()
+    plt.bar(range(len(biases)), biases, color=colors)
+
+    plt.title('Course Biases for Each Stat')
+    plt.ylabel('Bias')
+    plt.xlabel('Stats')
+    results.beautify(fig)
+    frame1 = plt.gca()
+    frame1.axes.get_xaxis().set_ticks([])
+    frame1.axes.get_yaxis().set_ticks([])
+
+    plt.show()
+
+def correlated_cloud(randomness):
+    fig = plt.figure()
+    
+    # x = [random.uniform(0, 1) for i in range(1000)]
+    # y = [random.uniform(0, 1) for i in range(1000)]
+    
+    x = np.random.normal(0, 1, 2000)
+    y = np.random.normal(0, 1, 2000)
+    
+    y = weight_array(y, x, randomness)
+    
+    plt.scatter(x, y, color='0.5', edgecolor='none')
+    
+    plt.tight_layout()
+    plt.xlabel('Stat X')
+    plt.ylabel('Score')
+    
+    if randomness > .7:
+        plt.title('Naive Stat-Score Relationship')
+    else:
+        plt.title('Bias-Weighted Stat-Score Relationship')
+        
+    results.beautify(fig)
+    frame1 = plt.gca()
+    frame1.axes.get_xaxis().set_ticks([])
+    frame1.axes.get_yaxis().set_ticks([])
+    
+    plt.show()
 
 # extract info about the course for a particular tournament
 def course_info_for_tournament(t, y):
