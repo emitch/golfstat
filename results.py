@@ -365,7 +365,6 @@ def test_model(data, stat_as_index, make_vector, model, do_pca=False, target='sc
     # kluge to allow for classifier and regressor evaluation
     try: pred = mod.predict_proba(fv_test)
     except: pred = mod.predict(fv_test)
-
     return pred, sc_test, mod
 
 def rmse(pred, real):
@@ -430,8 +429,6 @@ if __name__ == '__main__':
     # show_bias(data, '2015', stat_as_index, stats, tourns, names)
 
     # compile and shit
-    # pred, real, _ = test_model(data, stat_as_index, include_last_tourn, GaussianNB(), do_pca=False, target='cut')
-    # print(f1(real, pred[:,1]), roc_auc_score(real, pred[:,1]), 'GNB, all features')
     
     pred, real, _ = test_model(data, stat_as_index, include_last_tourn, LassoCV(cv=100), do_pca=False)
     err = pred - real
