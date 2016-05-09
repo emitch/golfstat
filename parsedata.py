@@ -6,6 +6,7 @@ import matplotlib.animation as animation
 import pylab as pl
 import imageio
 import operator
+import random
 
 # stat names corresponding to rankings, should be exluded in stat gathering
 rank_stats = ['All-Around Ranking', 'FedExCup Season Points',
@@ -353,9 +354,35 @@ def select_from_summaries(summaries, vals):
 
 def stats_and_scores(data, t, y, s):
     stats = stats_from_tournament(data, t, y, s)
-    par = int(course_info_for_tournament(t, y)['course_par']) * 4
-    summaries = [-(int(s['total_shots']) - par) for s in summaries_from_tournament(data, t, y)]
+    par = int(course_info_for_tournament(t, y)['course_par'])
+    summaries = [-(int(s['total_shots']) - par * int(s['num_rounds'])) for s in summaries_from_tournament(data, t, y)]
     return select_from_summaries(summaries, stats)
+    
+def scores_for_tournament(data, t, y):
+    par = int(course_info_for_tournament(t, y)['course_par'])
+    s = [-(int(s['total_shots']) - par * int(s['num_rounds'])) for s in summaries_from_tournament(data, t, y)]
+    return s
+    
+def random_rmse(data):
+    cwd = os.getcwd()
+    
+    all_tscores = []
+    all_random = []
+
+    # Iterate through tournaments
+    for t in os.listdir(cwd + '/scorecards'):
+        # skip hidden folders
+        if t.startswith('.'): continue
+
+        # get years for this tournament
+        years = os.listdir(cwd + '/scorecards/' + t)
+        for y in years:
+            if y.startswith('.'): continue
+            all_tscores += scores_for_tournament(data, t, y)
+            
+            all_random += [random.choice(all_tscores) for score in all_tscores]
+            
+    return (sum([(r - s) ** 2 for s, r in zip(all_tscores, all_random)]) / len(all_tscores)) ** .5
 
 # extract info about the course for a particular tournament
 def course_info_for_tournament(t, y):
