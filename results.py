@@ -2,9 +2,15 @@ from bs4 import BeautifulSoup as Soup
 from scipy.stats import spearmanr
 import requests, json, os, parsedata
 import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
 from sklearn.cross_validation import KFold
 from sklearn.preprocessing import Imputer
 from sklearn.linear_model import LassoCV, RidgeCV, ElasticNetCV, LinearRegression
+
+###############################################################################
+# SCRAPING METHODS: RUN ONCE AND NEVER AGAIN
+###############################################################################
 
 def scrape_scorecards():
     """ mine the pgatour data endpoint for individual tournament scorecards
@@ -80,6 +86,10 @@ def scrape_courses():
             data = requests.get(baseurl + path).text
             with open('scorecards/' + path, 'w') as file: file.write(data)
 
+###############################################################################
+# END OF SCRAPING METHODS
+###############################################################################
+
 def players_in_tourn(tourn_id, year):
     """ return an iterable of player ids corresponding to tournament
     participation """
@@ -93,7 +103,6 @@ def players_in_tourn(tourn_id, year):
         if player_id.isdigit(): players.append(player_id)
 
     return players
-
 
 def course_stat_bias(data, tourn_id, stat_as_index, years=None):
     """ Calculate the spearman correlation of each stat with tournament
@@ -195,11 +204,21 @@ def include_last_tourn(player, course, biases, stat_as_index):
     n_stats = len(basic)
     fv = np.empty(n_stats + 1)
     fv[:-1] = basic
-    fv[-1] =
+    fv[-1] = parsedata.rank_last_weekend(player, course)
+
+    return fv
 
 ###############################################################################
 # END OF FEATURE VECTOR BUILDING
 ###############################################################################
+
+def compute_biases(data, stat_as_index, year):
+    biases = {}
+    for tourn_id in os.listdir('scorecards/'):
+        if not tourn_id.isdigit(): continue
+        biases[tourn_id] = course_stat_bias(data, tourn_id, stat_as_index, [year])
+
+    return biases
 
 def build_fvs(data, year, stat_as_index, make_vector=basic_fv):
     """ train a model to predict performance on the level of tournaments
@@ -208,10 +227,7 @@ def build_fvs(data, year, stat_as_index, make_vector=basic_fv):
     the input data: data, biases, and stat_as_index """
     # First gather all the course biases, final feature vectors are player stats
     # modulated by the degree to which a given stat predicts success on a course
-    biases = {}
-    for tourn_id in os.listdir('scorecards/'):
-        if not tourn_id.isdigit(): continue
-        biases[tourn_id] = course_stat_bias(data, tourn_id, stat_as_index, [year])
+    biases = compute_biases(data, stat_as_index, year)
 
     # now compile feature vectors, iterating through players and looking up
     # course biases for each tournament, also get tournament data
@@ -286,7 +302,7 @@ def build_fvs(data, year, stat_as_index, make_vector=basic_fv):
 
 #     return corrs, info
 
-def test_model(data, stat_as_index, make_vector, regressor):
+def test_model(data, stat_as_index, make_vector, regressor, do_pca=False):
     # compile and shit
     print('Compiling stats...')
     fv, sc = [], []
@@ -310,30 +326,30 @@ def test_model(data, stat_as_index, make_vector, regressor):
     # Compile into single vectors: Predict 2016 from 2014 and 2015
     fv_train, fv_test = np.vstack(fv[0:2]), fv[2]
     sc_train, sc_test = np.concatenate(sc[0:2]), sc[2]
-    
-    print(fv_train.shape, sc_train.shape, fv_test.shape, sc_test.shape)
 
+    # Impute NaNs
     train_nan = np.isnan(fv_train)
     test_nan = np.isnan(fv_test)
 
-    # Impute NaNs
-    print('Imputing')
+    print('Imputing...')
     if train_nan.any():
         i1 = Imputer()
         fv_train = i1.fit_transform(fv_train)
-        print(i1.statistics_)
+        #print(i1.statistics_)
     if test_nan.any():
         i2 = Imputer()
         fv_test = i2.fit_transform(fv_test)
-        print(i2.statistics_)
+        #print(i2.statistics_)
 
-    print(fv_train.shape, sc_train.shape, fv_test.shape, sc_test.shape)
+    if do_pca:
+        pca = PCA(whiten=False)
+        fv_train = pca.fit_transform(fv_train)
+        fv_test = pca.transform(fv_test)
+
     # Exclude players with missing scores
     train_nan, test_nan = np.isnan(sc_train), np.isnan(sc_test)
     fv_train, sc_train = fv_train[~train_nan], sc_train[~train_nan]
     fv_test, sc_test = fv_test[~test_nan], sc_test[~test_nan]
-    
-    print(fv_train.shape, sc_train.shape, fv_test.shape, sc_test.shape)
 
     # Build model
     mod = regressor
@@ -348,6 +364,46 @@ def test_model(data, stat_as_index, make_vector, regressor):
 
     return rmse, mod
 
+def show_bias(data, year, stat_as_index, stats_to_show, tourns_to_show):
+    # get biases
+    biases = compute_biases(data, stat_as_index, year)
+
+    n_groups = len(tourns_to_show)
+    n_stats = len(stats_to_show)
+    bar_width = 0.9 / n_stats
+    colors = ['c','m','y','k']
+
+    # plot those motherfuckers
+    fig = plt.figure()
+    for i, tourn in enumerate(tourns_to_show):
+        for j, stat in enumerate(stats_to_show):
+            offset = j*bar_width
+            plt.bar(i + 0.5 + offset, abs(biases[tourn][stat_as_index[stat]]),
+                bar_width, color=colors[j%(n_stats-1)])
+
+    plt.xticks(range(1,len(tourns_to_show)+1), tourns_to_show)
+    plt.xlabel('Tournament')
+    plt.ylabel('Spearman correlation of stat with score')
+    plt.legend(stats_to_show)
+    beautify(fig)
+
+    plt.show()
+
+def beautify(fig):
+    # Set background color to white
+    fig.patch.set_facecolor((1,1,1))
+
+    # Remove frame and unnecessary tick-marks
+    ax = plt.subplot(111)
+    ax.spines['top'].set_visible(False)
+    ax.spines['bottom'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.spines['left'].set_visible(False)
+
+    plt.tick_params(axis='y', which='both', left='off', right='off')
+    plt.tick_params(axis='x', which='both', top='off', bottom='off')
+    return ax
+
 if __name__ == '__main__':
     # load data
     data = parsedata.player_data_from_years(
@@ -355,19 +411,26 @@ if __name__ == '__main__':
     with open('stat_as_index.json', 'r') as f:
         stat_as_index = json.load(f)
 
+    stats = ['Driving Distance', 'Scrambling', 'Sand Save Percentage',
+        'Overall Putting Average', 'Proximity to Hole']
+    tourns = ['010', '012', '013']
+    show_bias(data, '2015', stat_as_index, stats, tourns)
+
     # compile and shit
     print('Basic FV, Lasso')
-    test_model(data, stat_as_index, basic_fv, LassoCV())
+    rmse, _ = test_model(data, stat_as_index, include_last_tourn, LassoCV(cv=100), do_pca=False)
+
 
     # try again with whitelist
-    whitelist = ['Birdie Average', 'Scrambling', 'Scrambling from the Rough',
-        'Scoring Average', 'Sand Save Percentage', 'Driving Distance']
+    results = {}
+    for whitelist in os.listdir('whitelists'):
+        if whitelist.startswith('.'): continue
+        wl = {}
+        with open('whitelists/' + whitelist) as file:
+            for i, line in enumerate(file): wl[line.strip('\n')] = i
 
-    wl = {}
-    for i, stat in enumerate(whitelist): wl[stat] = i
-    print('Whitelisted stats')
-    test_model(data, wl, basic_fv, LinearRegression())
+        results[whitelist.strip('.csv')], _ = test_model(data, wl, include_last_tourn, LinearRegression(), do_pca=False)
 
-    print('POOP')
-    test_model(data, wl, include_distance, LinearRegression())
-
+    print(rmse, 'Lasso on all features')
+    for name in results:
+        print(results[name], name)
