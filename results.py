@@ -3,10 +3,14 @@ from scipy.stats import spearmanr
 import requests, json, os, parsedata
 import numpy as np
 import matplotlib.pyplot as plt
+
 from sklearn.decomposition import PCA
 from sklearn.cross_validation import KFold
 from sklearn.preprocessing import Imputer
 from sklearn.linear_model import LassoCV, RidgeCV, ElasticNetCV, LinearRegression
+from sklearn.naive_bayes import GaussianNB
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import roc_auc_score, f1_score
 
 ###############################################################################
 # SCRAPING METHODS: RUN ONCE AND NEVER AGAIN
@@ -220,8 +224,8 @@ def compute_biases(data, stat_as_index, year):
 
     return biases
 
-def build_fvs(data, year, stat_as_index, make_vector=basic_fv):
-    """ train a model to predict performance on the level of tournaments
+def build_fvs(data, year, stat_as_index, make_vector=basic_fv, target='score'):
+    """ make features to predict performance on the level of tournaments
     using individual player stats and their importance for each course.
     The function make_vector is the one that builds a feature vector from
     the input data: data, biases, and stat_as_index """
@@ -244,18 +248,26 @@ def build_fvs(data, year, stat_as_index, make_vector=basic_fv):
                 data[player][year], course_info, biases[tourn], stat_as_index)
             # add to running list
             feature_vector_list.append(fv)
-            # get results
-            shots = data[player][year][tourn]['summary']['total_shots']
-            rnds = data[player][year][tourn]['summary']['num_rounds']
+            if target == 'score':
+                # get results
+                shots = data[player][year][tourn]['summary']['total_shots']
+                rnds = data[player][year][tourn]['summary']['num_rounds']
 
-            par = float(course_info['course_par'])
-            scores.append((float(shots)/float(rnds))-par)
+                par = float(course_info['course_par'])
+                scores.append((float(shots)/float(rnds))-par)
+            elif target == 'cut':
+                if data[player][year][tourn]['summary']['rank'] == 'mc':
+                    scores.append(False)
+                else: scores.append(True)
+            else: raise ValueError('Bad target')
+
 
     # concatenate list into single np matrix
     unbiased_stats = np.vstack(feature_vector_list)
     scores = np.array(scores)
 
     return unbiased_stats, scores
+
 
 # def hole_stat_bias(data, tourn_id, years, h):
 #     raise
@@ -302,26 +314,15 @@ def build_fvs(data, year, stat_as_index, make_vector=basic_fv):
 
 #     return corrs, info
 
-def test_model(data, stat_as_index, make_vector, regressor, do_pca=False):
+def test_model(data, stat_as_index, make_vector, model, do_pca=False, target='score'):
     # compile and shit
     print('Compiling stats...')
     fv, sc = [], []
     for year in ['2014', '2015', '2016']:
         f,s = build_fvs(
-            data, year, stat_as_index, make_vector=make_vector)
+            data, year, stat_as_index, make_vector, target)
         fv.append(f)
         sc.append(s)
-
-    # # train model and evaluate using kfold cross validation
-    # print('Training model...')
-    # n_obs = len(sc)
-    # pred = np.empty(n_obs)
-    # for train, test in KFold(n_obs, 100):
-    #     # fit
-    #     mod = regressor
-    #     mod.fit(bs[train,:], sc[train])
-    #     # predict
-    #     pred[test] = mod.predict(bs[test,:])
 
     # Compile into single vectors: Predict 2016 from 2014 and 2015
     fv_train, fv_test = np.vstack(fv[0:2]), fv[2]
@@ -342,7 +343,7 @@ def test_model(data, stat_as_index, make_vector, regressor, do_pca=False):
         #print(i2.statistics_)
 
     if do_pca:
-        pca = PCA(whiten=False)
+        pca = PCA(whiten=True)
         fv_train = pca.fit_transform(fv_train)
         fv_test = pca.transform(fv_test)
 
@@ -352,17 +353,20 @@ def test_model(data, stat_as_index, make_vector, regressor, do_pca=False):
     fv_test, sc_test = fv_test[~test_nan], sc_test[~test_nan]
 
     # Build model
-    mod = regressor
+    mod = model
     mod.fit(fv_train, sc_train)
-    pred = mod.predict(fv_test)
+    # kluge to allow for classifier and regressor evaluation
+    try: pred = mod.predict_proba(fv_test)
+    except: pred = mod.predict(fv_test)
 
-    # average errors
-    print('Calculating errors...')
-    err = pred - sc_test
-    rmse = np.nanmean(err ** 2) ** .5
-    print('Root-mean-square-error: %.4f' % rmse)
+    return pred, sc_test, mod
 
-    return rmse, mod
+def rmse(pred, real):
+    return np.nanmean((pred - real) ** 2) ** .5
+
+def f1(real, pred):
+    pred = pred > 0.5
+    return f1_score(real, pred)
 
 def show_bias(data, year, stat_as_index, stats_to_show, tourns_to_show, tourn_names=None):
     # get biases
@@ -412,16 +416,15 @@ if __name__ == '__main__':
     with open('stat_as_index.json', 'r') as f:
         stat_as_index = json.load(f)
 
-    stats = ['Driving Distance', 'Scrambling', 'Sand Save Percentage',
-        'Overall Putting Average', 'Proximity to Hole']
-    tourns = ['010', '012', '013']
-    names = ['Honda Classic', 'RBC Heritage', 'Wyndham Championship']
-    show_bias(data, '2015', stat_as_index, stats, tourns, names)
+    # stats = ['Driving Distance', 'Scrambling', 'Sand Save Percentage',
+    #     'Overall Putting Average', 'Proximity to Hole']
+    # tourns = ['010', '012', '013']
+    # names = ['Honda Classic', 'RBC Heritage', 'Wyndham Championship']
+    # show_bias(data, '2015', stat_as_index, stats, tourns, names)
 
     # compile and shit
-    print('Basic FV, Lasso')
-    rmse, _ = test_model(data, stat_as_index, include_last_tourn, LassoCV(cv=100), do_pca=False)
-
+    pred, real, _ = test_model(data, stat_as_index, include_last_tourn, GaussianNB(), do_pca=False, target='cut')
+    print(f1(real, pred[:,1]), roc_auc_score(real, pred[:,1]), 'GNB, all features')
 
     # try again with whitelist
     results = {}
@@ -431,8 +434,13 @@ if __name__ == '__main__':
         with open('whitelists/' + whitelist) as file:
             for i, line in enumerate(file): wl[line.strip('\n')] = i
 
-        results[whitelist.strip('.csv')], _ = test_model(data, wl, include_last_tourn, LinearRegression(), do_pca=False)
+        pred, real, _ = test_model(
+            data, wl, include_last_tourn, GaussianNB(), do_pca=False, target='cut')
+        results[whitelist.strip('.csv')] = (f1(real, pred[:,1]), roc_auc_score(real, pred[:,1]))
 
-    print(rmse, 'Lasso on all features')
     for name in results:
         print(results[name], name)
+
+
+
+
