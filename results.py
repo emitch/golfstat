@@ -2,8 +2,8 @@ from bs4 import BeautifulSoup as Soup
 from scipy.stats import spearmanr
 import requests, json, os, parsedata
 import numpy as np
-
-from sklearn.decompositions import PCA
+import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
 from sklearn.cross_validation import KFold
 from sklearn.preprocessing import Imputer
 from sklearn.linear_model import LassoCV, RidgeCV, ElasticNetCV, LinearRegression
@@ -212,6 +212,14 @@ def include_last_tourn(player, course, biases, stat_as_index):
 # END OF FEATURE VECTOR BUILDING
 ###############################################################################
 
+def compute_biases(data, stat_as_index, year):
+    biases = {}
+    for tourn_id in os.listdir('scorecards/'):
+        if not tourn_id.isdigit(): continue
+        biases[tourn_id] = course_stat_bias(data, tourn_id, stat_as_index, [year])
+
+    return biases
+
 def build_fvs(data, year, stat_as_index, make_vector=basic_fv):
     """ train a model to predict performance on the level of tournaments
     using individual player stats and their importance for each course.
@@ -219,10 +227,7 @@ def build_fvs(data, year, stat_as_index, make_vector=basic_fv):
     the input data: data, biases, and stat_as_index """
     # First gather all the course biases, final feature vectors are player stats
     # modulated by the degree to which a given stat predicts success on a course
-    biases = {}
-    for tourn_id in os.listdir('scorecards/'):
-        if not tourn_id.isdigit(): continue
-        biases[tourn_id] = course_stat_bias(data, tourn_id, stat_as_index, [year])
+    biases = compute_biases(data, stat_as_index, year)
 
     # now compile feature vectors, iterating through players and looking up
     # course biases for each tournament, also get tournament data
@@ -330,14 +335,14 @@ def test_model(data, stat_as_index, make_vector, regressor, do_pca=False):
     if train_nan.any():
         i1 = Imputer()
         fv_train = i1.fit_transform(fv_train)
-        print(i1.statistics_)
+        #print(i1.statistics_)
     if test_nan.any():
         i2 = Imputer()
         fv_test = i2.fit_transform(fv_test)
-        print(i2.statistics_)
+        #print(i2.statistics_)
 
     if do_pca:
-        pca = PCA(whiten=True)
+        pca = PCA(whiten=False)
         fv_train = pca.fit_transform(fv_train)
         fv_test = pca.transform(fv_test)
 
@@ -359,6 +364,46 @@ def test_model(data, stat_as_index, make_vector, regressor, do_pca=False):
 
     return rmse, mod
 
+def show_bias(data, year, stat_as_index, stats_to_show, tourns_to_show):
+    # get biases
+    biases = compute_biases(data, stat_as_index, year)
+
+    n_groups = len(tourns_to_show)
+    n_stats = len(stats_to_show)
+    bar_width = 0.9 / n_stats
+    colors = ['c','m','y','k']
+
+    # plot those motherfuckers
+    fig = plt.figure()
+    for i, tourn in enumerate(tourns_to_show):
+        for j, stat in enumerate(stats_to_show):
+            offset = j*bar_width
+            plt.bar(i + 0.5 + offset, abs(biases[tourn][stat_as_index[stat]]),
+                bar_width, color=colors[j%(n_stats-1)])
+
+    plt.xticks(range(1,len(tourns_to_show)+1), tourns_to_show)
+    plt.xlabel('Tournament')
+    plt.ylabel('Spearman correlation of stat with score')
+    plt.legend(stats_to_show)
+    beautify(fig)
+
+    plt.show()
+
+def beautify(fig):
+    # Set background color to white
+    fig.patch.set_facecolor((1,1,1))
+
+    # Remove frame and unnecessary tick-marks
+    ax = plt.subplot(111)
+    ax.spines['top'].set_visible(False)
+    ax.spines['bottom'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.spines['left'].set_visible(False)
+
+    plt.tick_params(axis='y', which='both', left='off', right='off')
+    plt.tick_params(axis='x', which='both', top='off', bottom='off')
+    return ax
+
 if __name__ == '__main__':
     # load data
     data = parsedata.player_data_from_years(
@@ -366,20 +411,26 @@ if __name__ == '__main__':
     with open('stat_as_index.json', 'r') as f:
         stat_as_index = json.load(f)
 
+    stats = ['Driving Distance', 'Scrambling', 'Sand Save Percentage',
+        'Overall Putting Average', 'Proximity to Hole']
+    tourns = ['010', '012', '013']
+    show_bias(data, '2015', stat_as_index, stats, tourns)
+
     # compile and shit
     print('Basic FV, Lasso')
-    test_model(data, stat_as_index, include_last_tourn, LassoCV())
+    rmse, _ = test_model(data, stat_as_index, include_last_tourn, LassoCV(cv=100), do_pca=False)
 
 
-    # # try again with whitelist
-    # whitelist = ['Birdie Average', 'Scrambling', 'Scrambling from the Rough',
-    #     'Scoring Average', 'Sand Save Percentage', 'Driving Distance']
+    # try again with whitelist
+    results = {}
+    for whitelist in os.listdir('whitelists'):
+        if whitelist.startswith('.'): continue
+        wl = {}
+        with open('whitelists/' + whitelist) as file:
+            for i, line in enumerate(file): wl[line.strip('\n')] = i
 
-    # wl = {}
-    # for i, stat in enumerate(whitelist): wl[stat] = i
-    # print('Whitelisted stats')
-    # test_model(data, wl, basic_fv, LinearRegression())
+        results[whitelist.strip('.csv')], _ = test_model(data, wl, include_last_tourn, LinearRegression(), do_pca=False)
 
-    # print('POOP')
-    # test_model(data, wl, include_distance, LinearRegression())
-
+    print(rmse, 'Lasso on all features')
+    for name in results:
+        print(results[name], name)
