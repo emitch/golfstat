@@ -8,6 +8,7 @@ import imageio
 import operator
 import random
 import results
+import scipy
 
 # stat names corresponding to rankings, should be exluded in stat gathering
 rank_stats = ['All-Around Ranking', 'FedExCup Season Points',
@@ -64,7 +65,7 @@ def tournament_files_for_years(years):
 
     return tournaments_by_year
 
-def player_data_from_years(years, require_min_rounds=True, dict_by_id=True):
+def player_data_from_years(years, require_min_rounds=False, dict_by_id=True):
     # Find files matching a given year
     selected_files = stat_files_for_years(years)
 
@@ -87,16 +88,16 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=True):
             player_number = json_data['plrs'][0]['plrNum']
             player_year = json_data['plrs'][0]['years'][0]['year']
         except:
-            sys.stdout.write('\r')
-            print(f)
             continue
 
-        sys.stdout.write('\r%s\t%s' % (player_number, player_year))
+        # sys.stdout.write('\r%s\t%s' % (player_number, player_year))
         # clean up dictionary
         sanitized = {}
         for tour in json_data['plrs'][0]['years'][0]['tours']:
             if tour['tourName'] == 'PGA TOUR':
-                if require_min_rounds and tour['minRndsMet'] == 'N': continue
+                if require_min_rounds and tour['minRndsMet'] == 'N':
+                    print('min rounds', player_number, player_year)
+                    continue
                 # This is from the PGA TOUR
                 for cat in tour['statCats']:
                     # Get stats from all categories
@@ -155,7 +156,8 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=True):
             # go through every player file this year
             for idx, player in enumerate(tournament_file_dict[tournament][year]):
                 pid = player['id']
-                print('\rGetting player %s' % (pid), end='')
+                
+                # print('\rGetting player %s' % (pid), end='')
                 # if this player exists and has stats
                 if pid in data and year in data[pid]:
                     file = open(tournament_file_dict[tournament][year][idx]['f'], 'r')
@@ -197,7 +199,9 @@ def player_data_from_years(years, require_min_rounds=True, dict_by_id=True):
                         continue
 
                     # skip if we have a weird number of rounds
+                    # CHOOSE HERE IF WE WANT TO INCLUDE MCs (WE DO FOR CUT CLASSIFICATION)
                     if total_rounds not in [2,3,4]:
+                    # if total_rounds not in [4]:
                         continue
 
                     # populate the easy stuff
@@ -339,13 +343,12 @@ def summaries_from_tournament(data, tournament_to_find, year):
         player = data[p]
         if year in player:
             year_data = player[year]
-
             for t in year_data:
                 if t == 'stats': continue
                 if t == tournament_to_find:
                     tournament = year_data[t]
                     scorecards.append(tournament['summary'])
-
+    
     return scorecards
 
 def select_from_summaries(summaries, vals):
@@ -362,8 +365,64 @@ def stats_and_scores(data, t, y, s):
 
 def scores_for_tournament(data, t, y):
     par = int(course_info_for_tournament(t, y)['course_par'])
-    s = [-(int(s['total_shots']) - par * int(s['num_rounds'])) for s in summaries_from_tournament(data, t, y)]
-    return s
+    
+    cwd = os.getcwd()
+    
+    all_tscores = []
+    all_random = []
+
+    summaries = summaries_from_tournament(data, t, '2014')
+    all_scores = []
+    for summary in summaries:
+        for r in summary['round_stats']:
+            all_scores.append(float(r['score']) - par)
+            
+    return all_scores
+    
+def par_rmse(data):
+    cwd = os.getcwd()
+    
+    all_tscores = []
+
+    # Iterate through tournaments
+    for t in os.listdir(cwd + '/scorecards'):
+        # skip hidden folders
+        if t.startswith('.'): continue
+
+        # get years for this tournament
+        years = os.listdir(cwd + '/scorecards/' + t)
+        for y in years:
+            if y.startswith('.'): continue
+            all_tscores += scores_for_tournament(data, t, y)
+    
+    # print(scipy.stats.mode(all_tscores))
+    # plt.hist(all_tscores, bins=30)
+    # plt.show()
+    
+    return (sum([s ** 2 for s in all_tscores]) / len(all_tscores)) ** .5    
+    
+def avg_rmse(data):
+    cwd = os.getcwd()
+    
+    all_tscores = []
+    all_avg = []
+
+    # Iterate through tournaments
+    for t in os.listdir(cwd + '/scorecards'):
+        # skip hidden folders
+        if t.startswith('.'): continue
+
+        # get years for this tournament
+        years = os.listdir(cwd + '/scorecards/' + t)
+        for y in years:
+            if y.startswith('.'): continue
+            all_scores = scores_for_tournament(data, t, y)
+            all_tscores += all_scores
+            avg_score = np.mean(all_scores)
+            all_avg += [avg_score for i in all_scores]
+    print(len(all_tscores))
+    # print(all_tscores[0], all_random[0])
+    return (sum([(a - s) ** 2 for s, a in zip(all_tscores, all_avg)]) / len(all_tscores)) ** .5
 
 def random_rmse(data):
     cwd = os.getcwd()
@@ -380,7 +439,9 @@ def random_rmse(data):
         years = os.listdir(cwd + '/scorecards/' + t)
         for y in years:
             if y.startswith('.'): continue
-            all_tscores += scores_for_tournament(data, t, y)
+            all_scores = scores_for_tournament(data, t, y)
+            
+            all_tscores += all_scores
             
             all_random += [random.choice(all_tscores) for score in all_tscores]
             

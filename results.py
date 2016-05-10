@@ -1,8 +1,13 @@
 from bs4 import BeautifulSoup as Soup
-from scipy.stats import spearmanr
+from scipy.stats import spearmanr, pearsonr
 import requests, json, os, parsedata
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
+from pprint import pprint
+from scipy import stats as spstats
+
+import matplotlib
 
 from sklearn.decomposition import PCA
 from sklearn.cross_validation import KFold
@@ -11,6 +16,14 @@ from sklearn.linear_model import LassoCV, RidgeCV, ElasticNetCV, LinearRegressio
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import roc_auc_score, f1_score
+from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier, AdaBoostClassifier
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.linear_model import OrthogonalMatchingPursuitCV
+from sklearn.metrics import roc_curve, auc, precision_recall_curve
+
+BAD_RANK = 9999999999
 
 ###############################################################################
 # SCRAPING METHODS: RUN ONCE AND NEVER AGAIN
@@ -126,12 +139,30 @@ def course_stat_bias(data, tourn_id, stat_as_index, years=None):
             if player not in data: continue
             if year not in data[player]: continue
             if tourn_id not in data[player][year]: continue
-
+            
+            
             # compile performance and stuff
             shots = data[player][year][tourn_id]['summary']['total_shots']
             rnds = data[player][year][tourn_id]['summary']['num_rounds']
-
-            scores.append(float(shots)/float(rnds))
+            par = int(data[player][year][tourn_id]['summary']['course_par'])
+            
+            summaries = parsedata.summaries_from_tournament(data, tourn_id, year)
+            all_scores = []
+            for summary in summaries:
+                for r in summary['round_stats']:
+                    all_scores.append(float(r['score']))
+            
+            avg_score = np.mean(all_scores)
+            
+            round_scores = []
+            for r in data[player][year][tourn_id]['summary']['round_stats']:
+                round_scores.append(float(r['score']) - par)
+            round_scores = np.array(round_scores)
+            
+            # scores.append(-(float(shots)/float(rnds) - par))
+            
+            # use the player's distance from par
+            scores.append(abs(np.mean(round_scores)))
 
     # initialize vector of spearman correlations
     corrs = np.empty(len(stat_as_index))
@@ -147,12 +178,26 @@ def course_stat_bias(data, tourn_id, stat_as_index, years=None):
                 if year not in data[player]: continue
                 if tourn_id not in data[player][year]: continue
                 # compile performance and stuff
-                try: val = parse_stat(data[player][year]['stats'][stat]['value'])
-                except KeyError: val = np.nan
+                try: 
+                    val = parse_stat(data[player][year]['stats'][stat]['value'])
+                except KeyError: 
+                    val = np.nan
                 stats.append(val)
 
         # calculate correlation
-        corrs[stat_as_index[stat]], _ = spearmanr(scores, stats)
+        try:
+            corrs[stat_as_index[stat]], _ = spearmanr(scores, stats, nan_policy='omit')
+        except:
+            corrs[stat_as_index[stat]] = 0
+        
+        # truncate negative correlations
+        if (corrs[stat_as_index[stat]]) < 0:
+            corrs[stat_as_index[stat]] = 0
+        else:
+            corrs[stat_as_index[stat]] = corrs[stat_as_index[stat]]
+            
+        # TO DISABLE BIASES UNCOMMENT THIS LINE
+        corrs[stat_as_index[stat]] = 1
 
     return corrs
 
@@ -190,15 +235,13 @@ def include_distance(player, course, biases, stat_as_index):
     # basic_fv but also append driving ratio and stuff
     basic = basic_fv(player, course, biases, stat_as_index)
     n_stats = len(basic)
-    fv = np.empty(n_stats + 3)
-    # get each other stat
-    try: dist = float(player['stats']['Driving Distance']['value'])
-    except KeyError: dist = np.nan
+    fv = np.empty(n_stats + 4)
 
-    fv[:-3] = basic
-    fv[-3] = float(course['three_yardage']) / dist
-    fv[-2] = float(course['four_yardage']) / dist
-    fv[-1] = float(course['five_yardage']) / dist
+    fv[:-4] = basic
+    fv[-4] = float(course['course_yardage'])
+    fv[-3] = float(course['three_yardage'])
+    fv[-2] = float(course['four_yardage'])
+    fv[-1] = float(course['five_yardage'])
 
     return fv
 
@@ -208,8 +251,35 @@ def include_last_tourn(player, course, biases, stat_as_index):
     n_stats = len(basic)
     fv = np.empty(n_stats + 1)
     fv[:-1] = basic
-    fv[-1] = parsedata.rank_last_weekend(player, course)
+    
+    last_rank = parsedata.rank_last_weekend(player, course)
+    if np.isnan(last_rank) or last_rank == 100:
+        last_rank = BAD_RANK
+    
+    fv[-1] = last_rank
+    # if last_rank < 999:
+    #     fv[-1] = 1
+    # else:
+    #     fv[-1] = 0
+    
+    return fv
 
+def include_everything(player, course, biases, stat_as_index):
+    basic = include_distance(player, course, biases, stat_as_index)
+    n_stats = len(basic)
+    fv = np.empty(n_stats + 1)
+    fv[:-1] = basic
+    
+    last_rank = parsedata.rank_last_weekend(player, course)
+    if np.isnan(last_rank) or last_rank == 100:
+        last_rank = sys.maxsize
+    
+    # fv[-1] = last_rank
+    if last_rank < 999:
+        fv[-1] = 1
+    else:
+        fv[-1] = 0
+    
     return fv
 
 ###############################################################################
@@ -350,18 +420,23 @@ def test_model(data, stat_as_index, make_vector, model, do_pca=False, target='sc
         #print(i2.statistics_)
 
     if do_pca:
+        print('Performing PCA...')
         pca = PCA(whiten=True)
         fv_train = pca.fit_transform(fv_train)
         fv_test = pca.transform(fv_test)
 
+    print('Building test/train sets...')
     # Exclude players with missing scores
     train_nan, test_nan = np.isnan(sc_train), np.isnan(sc_test)
     fv_train, sc_train = fv_train[~train_nan], sc_train[~train_nan]
     fv_test, sc_test = fv_test[~test_nan], sc_test[~test_nan]
 
+    print('Building model...')
     # Build model
     mod = model
     mod.fit(fv_train, sc_train)
+    
+    print('Predicting output...')
     # kluge to allow for classifier and regressor evaluation
     try: pred = mod.predict_proba(fv_test)
     except: pred = mod.predict(fv_test)
@@ -388,7 +463,7 @@ def show_bias(data, year, stat_as_index, stats_to_show, tourns_to_show, tourn_na
     for i, tourn in enumerate(tourns_to_show):
         for j, stat in enumerate(stats_to_show):
             offset = j*bar_width
-            plt.bar(i + 0.5 + offset, abs(biases[tourn][stat_as_index[stat]]),
+            plt.bar(i + 0.5 + offset, (biases[tourn][stat_as_index[stat]]),
                 bar_width, color=colors[j%(n_stats)])
 
     if tourn_names is None: tourn_names = tourns_to_show
@@ -397,8 +472,6 @@ def show_bias(data, year, stat_as_index, stats_to_show, tourns_to_show, tourn_na
     plt.ylabel('Spearman correlation of stat with score')
     plt.legend(stats_to_show, bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=3)
     beautify(fig)
-
-    plt.show()
 
 def beautify(fig):
     # Set background color to white
@@ -415,37 +488,61 @@ def beautify(fig):
     plt.tick_params(axis='x', which='both', top='off', bottom='off')
     return ax
 
-if __name__ == '__main__':
-    # load data
-    data = parsedata.player_data_from_years(
-        ['2014', '2015', '2016'], dict_by_id=True)
-    with open('stat_as_index.json', 'r') as f:
-        stat_as_index = json.load(f)
-
-    # stats = ['Driving Distance', 'Scrambling', 'Sand Save Percentage',
-    #     'Overall Putting Average', 'Proximity to Hole']
-    # tourns = ['010', '012', '013']
-    # names = ['Honda Classic', 'RBC Heritage', 'Wyndham Championship']
-    # show_bias(data, '2015', stat_as_index, stats, tourns, names)
-
-    # compile and shit
-    
-    pred, real, _ = test_model(data, stat_as_index, include_last_tourn, LassoCV(cv=100), do_pca=False)
-    err = pred - real
-    rmse = np.nanmean(err ** 2) ** .5
-    print(rmse)
-
+def madecut(data, stat_as_index):
     # try again with whitelist
     results = {}
+    wls = []
     for whitelist in os.listdir('whitelists'):
         if whitelist.startswith('.'): continue
         wl = {}
         with open('whitelists/' + whitelist) as file:
             for i, line in enumerate(file): wl[line.strip('\n')] = i
+        wls.append(wl)
+    
+    pred, real, _ = test_model(data, wls[3], include_everything, LogisticRegression(), do_pca=True, target='cut')
+    results[whitelist.strip('.csv')] = (f1(real, pred[:,1]), roc_auc_score(real, pred[:,1]))
+    # results[whitelist.strip('.csv')] = (f1(real, pred), roc_auc_score(real, pred))
+    # precision, recall, thresholds = precision_recall_curve(real, pred)
+    # pr_auc = auc(recall, precision)
+    # fpr, tpr, thresholds = roc_curve(real, pred)
+    # roc_auc = auc(fpr, tpr)
+    # results[whitelist.strip('.csv')] = (f1(real, pred), pr_auc, roc_auc, spearmanr(real, pred)[0], pearsonr(real, pred)[0])
+    
+    # plt.figure(1)
+    # 
+    # matplotlib.rcParams['figure.figsize'] = (10, 10)
+    # plt.plot(fpr, tpr, color='magenta' % roc_auc)
+    # plt.plot([0, 1], [0, 1], 'k--')
+    # plt.xlim([0.0, 1.0])
+    # plt.ylim([0.0, 1.05])
+    # plt.xlabel('False Positive Rate')
+    # plt.ylabel('True Positive Rate')
+    # plt.title('Receiver operating characteristic example')
+    # plt.legend(loc="lower right")
+    # 
+    # plt.figure(2)
+    # 
+    # plt.plot(recall, precision, color='magenta', label='PR curve (area = %0.2f)' % roc_auc)
+    # plt.xlim([0.0, 1.0])
+    # plt.ylim([0.0, 1.05])
+    # plt.xlabel('Recall')
+    # plt.ylabel('Precision')
+    # plt.title('Precision-Recall Curve')
+    # 
+    # plt.show()
 
-        pred, real, _ = test_model(
-            data, wl, include_last_tourn, GaussianNB(), do_pca=False, target='cut')
-        results[whitelist.strip('.csv')] = (f1(real, pred[:,1]), roc_auc_score(real, pred[:,1]))
 
     for name in results:
         print(results[name], name)
+
+if __name__ == '__main__':
+    # load data
+    data = parsedata.player_data_from_years(['2014', '2015', '2016'], dict_by_id=True)
+    with open('stat_as_index.json', 'r') as f:
+        stat_as_index = json.load(f)
+
+    # compile
+    pred, real, _ = test_model(data, stat_as_index, include_last_tourn, LassoCV(cv=100), do_pca=True)
+    print(np.nanmean((pred - real) ** 2) ** .5)
+
+    
